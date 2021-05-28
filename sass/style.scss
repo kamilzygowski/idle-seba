@@ -5,3 +5,32 @@ body {
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
+#left-options{
+    display: flex;
+    height:880px;
+    width:400px;
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        text-decoration: none;
+
+        li{
+            margin-left: 15px;
+            margin-top:55px;
+            margin-bottom:20px;
+            width:inherit;
+            background-image: url(https://i.postimg.cc/g0gCjJVJ/testbutton.png);
+            background-size: 300px 100px;
+            text-align: center;
+            text-decoration: none;
+
+            button {
+                height: 100px;
+                width:300px;
+            }
+        }
+    }
+}
