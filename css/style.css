@@ -1,21 +1,33 @@
 body {
   width: 1800px;
   height: 880px;
-  background: url(https://i.postimg.cc/Xq1MYp4k/test-main-screen.png);
+  background-color: red;
   background-repeat: no-repeat;
   background-size: 100%;
+}
+
+#game {
+  display: flex;
+  background-color: violet;
+}
+
+#main-game-panel {
+  height: 880px;
+  width: 80%;
+  background-color: green;
 }
 
 #left-options {
   display: flex;
   height: 880px;
-  width: 400px;
+  width: 20%;
+  background-color: blue;
 }
 
 #left-options ul {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 100%;
   text-decoration: none;
 }
 
@@ -23,15 +35,13 @@ body {
   margin-left: 15px;
   margin-top: 55px;
   margin-bottom: 20px;
-  width: inherit;
-  background-image: url(https://i.postimg.cc/g0gCjJVJ/testbutton.png);
-  background-size: 300px 100px;
+  width: 90%;
   text-align: center;
   text-decoration: none;
 }
 
 #left-options ul li button {
   height: 100px;
-  width: 300px;
+  width: 100%;
 }
-/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3Nhc3Mvc3R5bGUuc2NzcyIsInN0eWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGFBQVk7RUFDWixhQUFhO0VBQ2IsbUVBQW1FO0VBQ25FLDRCQUE0QjtFQUM1QixxQkFBcUI7QUNDekI7O0FERUE7RUFDSSxhQUFhO0VBQ2IsYUFBWTtFQUNaLFlBQVc7QUNDZjs7QURKQTtFQU1RLGFBQWE7RUFDYixzQkFBc0I7RUFDdEIsWUFBWTtFQUNaLHFCQUFxQjtBQ0U3Qjs7QURYQTtFQVlZLGlCQUFpQjtFQUNqQixnQkFBZTtFQUNmLG1CQUFrQjtFQUNsQixjQUFhO0VBQ2IsbUVBQW1FO0VBQ25FLDRCQUE0QjtFQUM1QixrQkFBa0I7RUFDbEIscUJBQXFCO0FDR2pDOztBRHRCQTtFQXNCZ0IsYUFBYTtFQUNiLFlBQVc7QUNJM0IiLCJmaWxlIjoic3R5bGUuY3NzIn0= */
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3Nhc3Mvc3R5bGUuc2NzcyIsInN0eWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGFBQVk7RUFDWixhQUFhO0VBQ2IscUJBQXFCO0VBQ3JCLDRCQUE0QjtFQUM1QixxQkFBcUI7QUNDekI7O0FERUE7RUFDSSxhQUFhO0VBQ2Isd0JBQXdCO0FDQzVCOztBREVBO0VBQ0ksYUFBYTtFQUNiLFVBQVU7RUFDVix1QkFBdUI7QUNDM0I7O0FERUE7RUFDSSxhQUFhO0VBQ2IsYUFBWTtFQUNaLFVBQVM7RUFDVCxzQkFBc0I7QUNDMUI7O0FETEE7RUFPUSxhQUFhO0VBQ2Isc0JBQXNCO0VBQ3RCLFdBQVc7RUFDWCxxQkFBcUI7QUNFN0I7O0FEWkE7RUFhWSxpQkFBaUI7RUFDakIsZ0JBQWU7RUFDZixtQkFBa0I7RUFDbEIsVUFBUztFQUNULGtCQUFrQjtFQUNsQixxQkFBcUI7QUNHakM7O0FEckJBO0VBcUJnQixhQUFhO0VBQ2IsV0FBVztBQ0kzQiIsImZpbGUiOiJzdHlsZS5jc3MifQ== */

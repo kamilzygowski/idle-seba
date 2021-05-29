@@ -1,35 +1,45 @@
 body {
     width:1800px;
     height: 880px;
-    background: url(https://i.postimg.cc/Xq1MYp4k/test-main-screen.png);
+    background-color: red;
     background-repeat: no-repeat;
     background-size: 100%;
+}
+
+#game{
+    display: flex;
+    background-color: violet;
+}
+
+#main-game-panel{
+    height: 880px;
+    width: 80%;
+    background-color: green;
 }
 
 #left-options{
     display: flex;
     height:880px;
-    width:400px;
+    width:20%;
+    background-color: blue;
 
     ul {
         display: flex;
         flex-direction: column;
-        width: 300px;
+        width: 100%;
         text-decoration: none;
 
         li{
             margin-left: 15px;
             margin-top:55px;
             margin-bottom:20px;
-            width:inherit;
-            background-image: url(https://i.postimg.cc/g0gCjJVJ/testbutton.png);
-            background-size: 300px 100px;
+            width:90%;
             text-align: center;
             text-decoration: none;
 
             button {
                 height: 100px;
-                width:300px;
+                width: 100%;
             }
         }
     }
