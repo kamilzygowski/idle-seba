@@ -1,0 +1,17 @@
+<canvas id='profile' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+<script>
+
+
+    var ctx = profile.getContext('2d');
+    ctx.font = '24px Tahoma';
+
+   
+    ctx.fillStyle = 'violet'; 
+    ctx.fillRect(0, 0, profile.width,profile.height);
+
+    var text= "Twój profil: ";
+    ctx.fillStyle = "indigo";
+    ctx.fillText(text, profile.width/2 - 150, profile.height/2);
+
+
+</script>

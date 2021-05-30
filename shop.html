@@ -1,1 +1,21 @@
-<p>zobaczymy czy tak bedziemy robic</p>
+<canvas id='shop' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+<script>
+
+    var ctx = shop.getContext('2d');
+    ctx.save();
+    ctx.font = '24px Tahoma';
+
+    ctx.fillStyle = '#e67e22';   //marchewkowy 
+    ctx.fillRect(0, 0, shop.width, shop.height);
+
+    ctx.fillText('Es', 255, 255);
+
+    testImg = new Image;
+    testImg.src = 'images/Avatar.png';
+    ctx.drawImage(testImg, 100, 100, 128, 128);
+
+    var text= "essa łysolu, co byś chciał kupić?";
+    ctx.fillStyle = "yellow";
+    ctx.fillText(text, shop.width/2, shop.height/2);
+
+</script>

@@ -1,1 +1,17 @@
-<p>czy inaczej</p>
+<canvas id='tavern' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+<script>
+
+
+    var ctx = tavern.getContext('2d');
+    ctx.font = '24px Tahoma';
+
+   
+    ctx.fillStyle = '#3498db';   //inny niebieski
+    ctx.fillRect(0, 0, tavern.width,tavern.height);
+
+    var text= "Siehehehema, może piwka?";
+    ctx.fillStyle = "indigo";
+    ctx.fillText(text, tavern.width/2 - 150, tavern.height/2);
+
+
+</script>
