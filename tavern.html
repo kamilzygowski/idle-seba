@@ -1,17 +1,63 @@
+<div id='tavernView'>
+
+</div>
+
+
+</div>
 <canvas id='tavern' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 <script>
 
 
     var ctx = tavern.getContext('2d');
     ctx.font = '24px Tahoma';
+    var tavernBackground = new Image;
+    tavernBackground.src = 'images/tavern.png';
+   
 
    
     ctx.fillStyle = '#3498db';   //inny niebieski
     ctx.fillRect(0, 0, tavern.width,tavern.height);
+    ctx.drawImage(tavernBackground,0,0, tavern.width, tavern.height);
 
-    var text= "Siehehehema, może piwka?";
+   /* var text= "Siehehehema, może piwka?";
     ctx.fillStyle = "indigo";
-    ctx.fillText(text, tavern.width/2 - 150, tavern.height/2);
+    ctx.fillText(text, tavern.width/2 - 150, tavern.height/2); */
+
+    var gambler = new Image,
+    gambler2 = new Image;
+    gambler.src = "images/Gambler1.png";
+    gambler2.src = "images/Gambler2.png";
+
+   /* var gambleNPC = ctx.drawImage(gambler, 600, 300, gambler.width*2, gambler.height*2);*/
+   var text = '<img id="' + 'gambler2" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style=" position:absolute">';
+   var tavernDiv = document.getElementById('tavernView');
+   tavernView.innerHTML = text;
+
+   var imgGambler = document.getElementById('gambler2');
 
 
+    imgGambler.addEventListener('mouseover', function(){
+        text = '<img id="' + 'gambler2" ' + 'src="images/Gambler2.png"' + ' width="134" ' + 'height="232"  style=" position:absolute">';
+        tavernView.innerHTML = text;
+       /* ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);*/
+    }); 
+
+    text = '<img id="' + 'gambler2" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style=" position:absolute">';
+    //tavernView.innerHTML = text;
+    
 </script>
+
+<style>
+
+    #gambler2 {
+        display: flex;
+        margin-left:35%;
+        margin-top: 29%;
+      
+    }
+
+    #tavernVIew {
+        display: flex;
+        justify-items: center;
+    }
+</style>
