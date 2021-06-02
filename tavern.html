@@ -13,6 +13,9 @@
     var tavernBackground = new Image;
     tavernBackground.src = 'images/tavern.png';
    
+    var gamblerText = ['Eeey sst, listen to me, for a second. I heared that you are new here, for foreign visitors we have special offer, sit here!',
+     'Lets roll some dices, ayeeee'];
+
 
    
     ctx.fillStyle = '#3498db';   //inny niebieski
@@ -24,40 +27,107 @@
     ctx.fillText(text, tavern.width/2 - 150, tavern.height/2); */
 
     var gambler = new Image,
-    gambler2 = new Image;
+    gambler2 = new Image,
+    window = new Image,
+    xButton = new Image;
     gambler.src = "images/Gambler1.png";
     gambler2.src = "images/Gambler2.png";
+    window.src = "images/window.png";
+    xButton.src = "images/closeButton.png";
+    
+    console.log(gamblerText[0]);
+
 
    /* var gambleNPC = ctx.drawImage(gambler, 600, 300, gambler.width*2, gambler.height*2);*/
-   var text = '<img id="' + 'gambler2" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style=" position:absolute">';
+   var gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style="position:absolute">',
+   poppingWindowHTML = '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>';
    var tavernDiv = document.getElementById('tavernView');
-   tavernView.innerHTML = text;
+   //tavernDiv.innerHTML += gamblerHTML /*+ '<img src="' + 'images/window.png"' + ' width="133" ' + 'height="333"' + 'style=" position:absolute">'*/; 
+   tavernDiv.innerHTML += poppingWindowHTML;
 
-   var imgGambler = document.getElementById('gambler2');
+   var gamblerObj = document.getElementById('gambler'),
+   poppingWindowObj = document.getElementById('poppingWindow'),
+    closeButtonObj = document.getElementById('xButton');
+   
+   
+
+    closeButtonObj.addEventListener('click', function(){
+        console.log('essa');
+        tavernDiv.innerHTML = '';
+        tavernDiv.innerHTML += gamblerHTML;
+    });
 
 
-    imgGambler.addEventListener('mouseover', function(){
-        text = '<img id="' + 'gambler2" ' + 'src="images/Gambler2.png"' + ' width="134" ' + 'height="232"  style=" position:absolute">';
-        tavernView.innerHTML = text;
-       /* ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);*/
+    gamblerObj.addEventListener('mouseover', function(){
+        gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler2.png"' + ' width="134" ' + 'height="232"  style="position:absolute">';
+        tavernDiv.innerHTML += gamblerHTML;
+        //ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);
+        console.log('nigu');
     }); 
 
-    text = '<img id="' + 'gambler2" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style=" position:absolute">';
-    //tavernView.innerHTML = text;
-    
+   /* gamblerObj.addEventListener('click', function(){
+        console.log('klik');
+        //ctx.drawImage(window, tavern.width/2 - window.width/2, tavern.height/2 - window.height/2, widnow.width, widnow.height);
+        ctx.drawImage(window,0, 0, window.width, window.height);
+        ctx.drawImage(xButton, 22, 22, xButton.width, xButton.height);
+    });*/
+
+    /*setInterval(function(){
+        tavernView.innerHTML = gamblerHTML;
+    }, 200);*/
+
+
+
 </script>
 
 <style>
 
-    #gambler2 {
+    #gambler {
         display: flex;
-        margin-left:35%;
-        margin-top: 29%;
+        margin-left:5%;
+        margin-top: 26%;
       
     }
 
-    #tavernVIew {
+    #tavernView {
+        width:1400px;
+        height: 720px;
         display: flex;
-        justify-items: center;
+        align-items:center;
+        justify-content: center;
+        position: absolute;
+    }
+
+    #poppingWindow {
+        position: absolute;
+        display:flex;
+        justify-content: center;
+        align-content: center;
+        width:1050px;
+        height: 650px;
+    }
+
+    #poppingWindow .active {
+        display: flex;
+    }
+
+    #xButton {
+        position:absolute;
+        width:64px;
+        height:64px;
+        margin-left: 85%;
+        margin-bottom: 10%;
+    }
+
+    #xButton:hover {
+        opacity:0.7;
+    }
+
+    #windowText {
+        color:#fff;
+        width: 840px;
+        margin-top:3%;
+        font-size:20px;
+        position: absolute;
     }
 </style>
