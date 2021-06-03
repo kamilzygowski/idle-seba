@@ -34,36 +34,75 @@
     gambler2.src = "images/Gambler2.png";
     window.src = "images/window.png";
     xButton.src = "images/closeButton.png";
-    
-    console.log(gamblerText[0]);
 
 
    /* var gambleNPC = ctx.drawImage(gambler, 600, 300, gambler.width*2, gambler.height*2);*/
    var gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style="position:absolute">',
-   poppingWindowHTML = '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>';
+   poppingWindowHTML = '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>';
    var tavernDiv = document.getElementById('tavernView');
-   //tavernDiv.innerHTML += gamblerHTML /*+ '<img src="' + 'images/window.png"' + ' width="133" ' + 'height="333"' + 'style=" position:absolute">'*/; 
-   tavernDiv.innerHTML += poppingWindowHTML;
+   tavernDiv.innerHTML += gamblerHTML /*+ '<img src="' + 'images/window.png"' + ' width="133" ' + 'height="333"' + 'style=" position:absolute">'*/; 
+  // tavernDiv.innerHTML += poppingWindowHTML;
 
    var gamblerObj = document.getElementById('gambler'),
    poppingWindowObj = document.getElementById('poppingWindow'),
     closeButtonObj = document.getElementById('xButton');
    
-   
+   console.log(gamblerObj);
 
-    closeButtonObj.addEventListener('click', function(){
-        console.log('essa');
+   function returnToBasicState(){
+    gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style="position:absolute">';
+        tavernDiv.innerHTML = gamblerHTML;
+        console.log('returned');
+   }
+
+   function closeWindow(){
+    console.log('essa');
         tavernDiv.innerHTML = '';
         tavernDiv.innerHTML += gamblerHTML;
-    });
+        returnToBasicState();
+        document.getElementById('gambler').addEventListener('mouseover', addGambler); 
+
+   };
 
 
-    gamblerObj.addEventListener('mouseover', function(){
-        gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler2.png"' + ' width="134" ' + 'height="232"  style="position:absolute">';
-        tavernDiv.innerHTML += gamblerHTML;
+   function addGambler(){
+
+    gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler2.png"' + ' width="134" ' + 'height="232"  style="position:absolute">';
+        tavernDiv.innerHTML = gamblerHTML;
         //ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);
         console.log('nigu');
-    }); 
+
+            document.getElementById('gambler').addEventListener('click', function(){
+        tavernDiv.innerHTML = '';
+        tavernDiv.innerHTML += poppingWindowHTML;
+        console.log('okienko pojawia sie');
+
+        document.getElementById('xButton').addEventListener('click', closeWindow);
+ 
+    });
+
+   };
+
+
+   //closeButtonObj.addEventListener('click', closeWindow);
+   setInterval(function(){
+       if(document.getElementById('gambler') == null){
+           console.log('xDD null i chuj');
+       } else {
+   document.getElementById('gambler').addEventListener('mouseenter', e=>{
+       addGambler();
+       document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
+   });
+   document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
+}
+
+
+
+ },100/60);
+
+    
+
+
 
    /* gamblerObj.addEventListener('click', function(){
         console.log('klik');
@@ -102,7 +141,7 @@
         position: absolute;
         display:flex;
         justify-content: center;
-        align-content: center;
+        align-content: flex-end;
         width:1050px;
         height: 650px;
     }
@@ -127,7 +166,19 @@
         color:#fff;
         width: 840px;
         margin-top:3%;
-        font-size:20px;
+        font-size:26px;
         position: absolute;
     }
+
+    #confirmButton {
+        position: absolute;
+        width: 110px;
+        height: 65px;
+        margin-top:52%;
+        background: url(images/cofirmButton.png) no-repeat;
+
+        color:#fff;
+
+    }
+
 </style>
