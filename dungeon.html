@@ -1,0 +1,43 @@
+<canvas id='dungeon' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+<button id = 'hero1heal' style="position: absolute; top:300px; left:500px;">Ulecz</button>
+<button id = 'hero2heal' style="position: absolute; top:300px; left:800px;">Ulecz</button>
+
+<script>
+    
+    hero1 = new Hero("Maciek", 'images/jakis_lucznik.png', 100, 100, 8, 100)
+    hero2 = new Hero("Seba", 'images/Avatar.png', 400, 100, 10, 90)
+    gameFrame = 0;
+
+    document.getElementById("hero1heal").addEventListener("click", function() {
+        hero1.health = hero1.maxHP;
+    },);
+
+    document.getElementById("hero2heal").addEventListener("click", function() {
+        hero2.health = hero2.maxHP;
+    },);
+
+    var ctx = dungeon.getContext('2d');
+    ctx.save();
+    ctx.font = '24px Tahoma';
+
+    function walka(){
+        if(gameFrame % 100 == 0){
+            hero1.health -= hero2.damage;
+            hero2.health -= hero1.damage;
+        }    
+    }
+    
+    function dungeonLoop(){
+        ctx.clearRect(0,0,dungeon.width,dungeon.height);
+        walka()
+        ctx.fillStyle = '#e67e22';   //marchewkowe tlo
+        ctx.fillRect(0, 0, dungeon.width, dungeon.height);
+        hero1.update();
+        hero2.update();
+        hero1.draw(ctx);
+        hero2.draw(ctx);    
+        gameFrame++;
+        requestAnimationFrame(dungeonLoop)
+    }
+    dungeonLoop();
+</script>
