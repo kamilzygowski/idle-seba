@@ -1,9 +1,42 @@
+<div id='shopView' style="position:absolute; width:1400px; height:720px; ">
+
+</div>
 <canvas id='shop' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 <script>
 
     var ctx = shop.getContext('2d');
-    ctx.save();
     ctx.font = '24px Tahoma';
+    
+    var shopDiv = document.getElementById('shopView');
+
+    var shopItem1;
+
+
+    var slotWindow = [{img: 'images/slotWindow.png', x:580, y:580, height:96, width:96},
+    {img: 'images/slotWindow.png', x:690, y:580, height:96, width:96},
+    {img: 'images/slotWindow.png', x:800, y:580, height:96, width:96},
+    {img: 'images/slotWindow.png', x:910, y:580, height:96, width:96},
+    {img: 'images/slotWindow.png', x:580, y:470, height:96, width:96},
+    {img: 'images/slotWindow.png', x:690, y:470, height:96, width:96},
+    {img: 'images/slotWindow.png', x:800, y:470, height:96, width:96},
+    {img: 'images/slotWindow.png', x:910, y:470, height:96, width:96}];
+    var shopSlot = [{x:580, y:100, height:96, width:96},
+    {x:690, y:100, height:96, width:96},
+    {x:800, y:100, height:96, width:96},
+    {x:910, y:100, height:96, width:96},
+    {x:580, y:210, height:96, width:96},
+    {x:690, y:210, height:96, width:96},
+    {x:800, y:210, height:96, width:96},
+    {x:910, y:210, height:96, width:96}
+];
+
+
+    slotWindowImg = new Image;
+    slotWindowImg.src = slotWindow[0].img;
+    heroAvatar = new Image;
+    heroAvatar.src = 'images/knightAvatar.png';
+    swordImg = new Image;
+    swordImg.src= 'images/sword.png';
 
     ctx.fillStyle = '#e67e22';   //marchewkowy 
     ctx.fillRect(0, 0, shop.width, shop.height);
@@ -12,10 +45,47 @@
 
     testImg = new Image;
     testImg.src = 'images/Avatar.png';
-    ctx.drawImage(testImg, 100, 100, 128, 128);
+    ctx.drawImage(testImg, 200, 100, 128, 128);
 
-    var text= "essa łysolu, co byś chciał kupić?";
-    ctx.fillStyle = "yellow";
-    ctx.fillText(text, shop.width/2, shop.height/2);
+    ctx.drawImage(heroAvatar, 200, 485 , 128, 128);
+    
+    
+    shopDiv.innerHTML += '<div id="shopItem1"><img src=' + '"images/sword.png"></div> ';
+    shopDiv.innerHTML += '<div id="shopItem2"><img src=' + '"images/shield.png"></div> ';
+    shopDiv.innerHTML += '<div id="shopItem3"><img src=' + '"images/sword.png"></div> ';
+
+
+
+    for(var i=0;i<=8;i++){
+        ctx.drawImage(slotWindowImg, slotWindow[i].x , slotWindow[i].y ,slotWindow[i].width, slotWindow[i].height);
+        ctx.drawImage(slotWindowImg, shopSlot[i].x , shopSlot[i].y ,shopSlot[i].width, shopSlot[i].height);
+    }
+
+   // setInterval(function(){
+        
+   // },1000/60);
+
+   console.log('shopitem1',shopItem1);
 
 </script>
+
+<style>
+
+    #shopItem1 {
+        position:absolute;
+        left:585px;
+        top:105px;
+    }
+
+    #shopItem2 {
+        position: absolute;
+        left:695px;
+        top:105px;
+    }
+
+    #shopItem3 {
+        position: absolute;
+        left:805px;
+        top:105px;
+    }
+</style>
