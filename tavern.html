@@ -1,5 +1,6 @@
 <div id='tavernView'>
-
+    <img id="gambler" src="images/Gambler1.png" style="position:absolute">
+    <img id="blackMarket" src="images/blackMarket.png" style="position:absolute">
 </div>
 
 
@@ -11,107 +12,143 @@
     ctx.font = '24px Tahoma';
     var tavernBackground = new Image;
     tavernBackground.src = 'images/tavern.png';
-   
+
     var gamblerText = ['Eeey sst, listen to me, for a second. I heared that you are new here, for foreign visitors we have special offer, sit here!',
-     'Lets roll some dices, ayeeee'];
+        'Lets roll some dices, ayeeee'];
+    var blackMarketText = ['essasasasa'];
+
+    var windows = {
+        poppingWindowHTML: '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>',
+        poppingWindowBlackMarket: '<div id="poppingWindow"><p id="windowText"> ' + blackMarketText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>'
+    };
+
+    var characters = {
+        gamblerHTML: '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + 'style="position:absolute">',
+        blackMarketHTML: '<img id="' + 'blackMarket" ' + 'src="images/blackMarket.png"' + ' style="position:absolute">'
+    };
 
 
-   
+
     ctx.fillStyle = '#3498db';   //inny niebieski
-    ctx.fillRect(0, 0, tavern.width,tavern.height);
-    ctx.drawImage(tavernBackground,0,0, tavern.width, tavern.height);
+    ctx.fillRect(0, 0, tavern.width, tavern.height);
+    ctx.drawImage(tavernBackground, 0, 0, tavern.width, tavern.height);
 
-   /* var text= "Siehehehema, może piwka?";
-    ctx.fillStyle = "indigo";
-    ctx.fillText(text, tavern.width/2 - 150, tavern.height/2); */
+    /* var text= "Siehehehema, może piwka?";
+     ctx.fillStyle = "indigo";
+     ctx.fillText(text, tavern.width/2 - 150, tavern.height/2); */
 
     var gambler = new Image,
-    gambler2 = new Image,
-    window = new Image,
-    xButton = new Image;
+        gambler2 = new Image,
+        window = new Image,
+        xButton = new Image;
     gambler.src = "images/Gambler1.png";
     gambler2.src = "images/Gambler2.png";
     window.src = "images/window.png";
     xButton.src = "images/closeButton.png";
 
 
-   /* var gambleNPC = ctx.drawImage(gambler, 600, 300, gambler.width*2, gambler.height*2);*/
-   var gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style="position:absolute">',
-   poppingWindowHTML = '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>';
-   var tavernDiv = document.getElementById('tavernView');
-   tavernDiv.innerHTML += gamblerHTML /*+ '<img src="' + 'images/window.png"' + ' width="133" ' + 'height="333"' + 'style=" position:absolute">'*/; 
-  // tavernDiv.innerHTML += poppingWindowHTML;
+    /* var gambleNPC = ctx.drawImage(gambler, 600, 300, gambler.width*2, gambler.height*2);*/
 
-   var gamblerObj = document.getElementById('gambler'),
-   poppingWindowObj = document.getElementById('poppingWindow'),
-    closeButtonObj = document.getElementById('xButton');
-   
-   console.log(gamblerObj);
+    var tavernDiv = document.getElementById('tavernView');
+    tavernDiv.innerHTML += characters.gamblerHTML /*+ '<img src="' + 'images/window.png"' + ' width="133" ' + 'height="333"' + 'style=" position:absolute">'*/;
+    // tavernDiv.innerHTML += windows.poppingWindowHTML;
 
-   function returnToBasicState(){
-    gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + ' width="134" ' + 'height="232"  style="position:absolute">';
-        tavernDiv.innerHTML = gamblerHTML;
+
+    var gamblerObj = document.getElementById('gambler'),
+        poppingWindowObj = document.getElementById('poppingWindow'),
+        closeButtonObj = document.getElementById('xButton');
+
+    function returnToBasicState() {
+        characters.gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + 'style="position:absolute">';
+        characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket.png"' + ' style="position:absolute">';
+        tavernDiv.innerHTML = '';
+        tavernDiv.innerHTML += characters.gamblerHTML;
+        tavernDiv.innerHTML += characters.blackMarketHTML;
         console.log('returned');
-   }
+    }
 
-   function closeWindow(){
-    console.log('essa');
+    function closeWindow() {
         tavernDiv.innerHTML = '';
-        tavernDiv.innerHTML += gamblerHTML;
+        tavernDiv.innerHTML += characters.gamblerHTML;
+        tavernDiv.innerHTML += characters.blackMarketHTML;
         returnToBasicState();
-        document.getElementById('gambler').addEventListener('mouseover', addGambler); 
+        document.getElementById('gambler').addEventListener('mouseover', addGambler);
+        document.getElementById('blackMarket').addEventListener('mouseover', addBlackMarket);
+    };
 
-   };
 
+    function addGambler() {
 
-   function addGambler(){
-
-    gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler2.png"' + ' width="134" ' + 'height="232"  style="position:absolute">';
-        tavernDiv.innerHTML = gamblerHTML;
-        //ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);
-        console.log('nigu');
-
-            document.getElementById('gambler').addEventListener('click', function(){
+        characters.gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler2.png"' + 'style="position:absolute">';
         tavernDiv.innerHTML = '';
-        tavernDiv.innerHTML += poppingWindowHTML;
-        console.log('okienko pojawia sie');
+        tavernDiv.innerHTML += characters.gamblerHTML;
+        //ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);
 
-        document.getElementById('xButton').addEventListener('click', closeWindow);
- 
-    });
+        characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket.png"' + ' style="position:absolute">';
+        tavernDiv.innerHTML += characters.blackMarketHTML;
 
-   };
+        document.getElementById('gambler').addEventListener('click', function () {
+            tavernDiv.innerHTML = '';
+            tavernDiv.innerHTML += windows.poppingWindowHTML;
+            console.log('okienko pojawia sie');
+
+            document.getElementById('xButton').addEventListener('click', closeWindow);
+
+        });
+
+    };
+
+    function addBlackMarket() {
+        characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket2.png"' + ' style="position:absolute">';
+        tavernDiv.innerHTML = '';
+        tavernDiv.innerHTML += characters.blackMarketHTML;
+        tavernDiv.innerHTML += characters.gamblerHTML;
+
+        document.getElementById('blackMarket').addEventListener('click', function () {
+            tavernDiv.innerHTML = '';
+            tavernDiv.innerHTML += windows.poppingWindowBlackMarket;
+            console.log('okienko pojawia sie');
+
+            document.getElementById('xButton').addEventListener('click', closeWindow);
 
 
-   //closeButtonObj.addEventListener('click', closeWindow);
-   setInterval(function(){
-       if(document.getElementById('gambler') == null){
-           console.log('xDD null i chuj');
-       } else {
-   document.getElementById('gambler').addEventListener('mouseenter', e=>{
-       addGambler();
-       document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
-   });
-   document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
-}
+        });
+    }
+
+
+    //closeButtonObj.addEventListener('click', closeWindow);
+    setInterval(function () {
+        if (document.getElementById('gambler') !== null) {
+            document.getElementById('gambler').addEventListener('mouseenter', e => {
+                addGambler();
+                document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
+            });
+
+        } 
+
+        if (document.getElementById('blackMarket') !== null) {
+            document.getElementById('blackMarket').addEventListener('mouseenter', e => {
+                addBlackMarket();
+                document.getElementById('blackMarket').addEventListener('mouseleave', returnToBasicState);
+            });
+        } 
+
+
+    }, 500 / 60);
 
 
 
- },100/60);
-
-    
 
 
-
-   /* gamblerObj.addEventListener('click', function(){
-        console.log('klik');
-        //ctx.drawImage(window, tavern.width/2 - window.width/2, tavern.height/2 - window.height/2, widnow.width, widnow.height);
-        ctx.drawImage(window,0, 0, window.width, window.height);
-        ctx.drawImage(xButton, 22, 22, xButton.width, xButton.height);
-    });*/
+    /* gamblerObj.addEventListener('click', function(){
+         console.log('klik');
+         //ctx.drawImage(window, tavern.width/2 - window.width/2, tavern.height/2 - window.height/2, widnow.width, widnow.height);
+         ctx.drawImage(window,0, 0, window.width, window.height);
+         ctx.drawImage(xButton, 22, 22, xButton.width, xButton.height);
+     });*/
 
     /*setInterval(function(){
-        tavernView.innerHTML = gamblerHTML;
+        tavernView.innerHTML = characters.gamblerHTML;
     }, 200);*/
 
 
@@ -119,29 +156,39 @@
 </script>
 
 <style>
-
     #gambler {
         display: flex;
-        margin-left:5%;
+        margin-left: 5%;
         margin-top: 26%;
-      
+        width:134px;
+        height: 232px;
+
+    }
+
+    #blackMarket {
+        display: flex;
+        left: 850px;
+        top: 233px;
+        width: 120px;
+        height: 238px;
+
     }
 
     #tavernView {
-        width:1400px;
+        width: 1400px;
         height: 720px;
         display: flex;
-        align-items:center;
+        align-items: center;
         justify-content: center;
         position: absolute;
     }
 
     #poppingWindow {
         position: absolute;
-        display:flex;
+        display: flex;
         justify-content: center;
         align-content: flex-end;
-        width:1050px;
+        width: 1050px;
         height: 650px;
     }
 
@@ -150,22 +197,22 @@
     }
 
     #xButton {
-        position:absolute;
-        width:64px;
-        height:64px;
+        position: absolute;
+        width: 64px;
+        height: 64px;
         margin-left: 85%;
         margin-bottom: 10%;
     }
 
     #xButton:hover {
-        opacity:0.7;
+        opacity: 0.7;
     }
 
     #windowText {
-        color:#fff;
+        color: #fff;
         width: 840px;
-        margin-top:3%;
-        font-size:26px;
+        margin-top: 3%;
+        font-size: 26px;
         position: absolute;
     }
 
@@ -173,11 +220,10 @@
         position: absolute;
         width: 110px;
         height: 65px;
-        margin-top:52%;
+        margin-top: 52%;
         background: url(images/cofirmButton.png) no-repeat;
 
-        color:#fff;
+        color: #fff;
 
     }
-
 </style>
