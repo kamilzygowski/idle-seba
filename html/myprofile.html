@@ -1,0 +1,50 @@
+<canvas id='profile' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+<button id = 'adventure' style="position: absolute; top:300px; left:500px;">PRZYGODA</button>
+<button id = 'training' style="position: absolute; top:350px; left:500px;">TRENING</button>
+
+<script>
+    var character_info = '';
+    var ctx = profile.getContext('2d');
+
+    my_profile();
+
+    async function get_my_profile_info(){
+        character_info = await gameApp.getCharacterInfo();
+        console.log(character_info);   
+        console.log(character_info);
+    }
+
+    async function set_my_profile_info(){
+        await get_my_profile_info();
+        console.log("siemka");
+        var name = "Twoja nazwa: " + character_info.name;
+        var level = "Twój poziom: " + character_info.level;
+        var skill = "Twój skill: " + character_info.skill;
+        console.log("3");
+        ctx.fillStyle = "indigo";
+        console.log("4");
+        ctx.fillText(name, profile.width/2 - 150, profile.height/2);
+        ctx.fillText(level, profile.width/2 - 150, profile.height/2 + 50);
+        ctx.fillText(skill, profile.width/2 - 150, profile.height/2 + 100);
+    }
+
+    function my_profile(){
+        
+        ctx.font = '24px Tahoma';
+        ctx.fillStyle = 'violet'; 
+        ctx.fillRect(0, 0, profile.width,profile.height);
+        set_my_profile_info();
+    }
+
+    document.getElementById("adventure").addEventListener("click", function() {
+        gameApp.gainLevel(character_info.level + 1);
+        my_profile();
+    },);
+
+    document.getElementById("training").addEventListener("click", function() {
+        gameApp.gainSkill(character_info.skill + 1);
+        my_profile();
+    },);
+    
+
+</script>

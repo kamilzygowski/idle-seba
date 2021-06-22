@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase.js"></script>
+    <meta charset="UTF-8">
+    <title> Idle Seba </title>
+</head>
+
+<body>
+    <div id="game">
+        <div id="left-options">
+            <ul>
+                <li><button class="left_panel_button" value="myprofile" type="button" href="#"> My profile </button></li>
+                <li><button class="left_panel_button" value="tavern" type="button" href="#"> Tavern </button></li>
+                <li><button class="left_panel_button" value="shop" type="button" href="#"> Shop </button></li>
+                <li><button class="left_panel_button" value="stable" type="button" href="#"> Stable </button></li>
+                <li><button class="left_panel_button" value="dungeon" type="button" href="#"> Dungeon </button></li>
+                <li><button class="left_panel_button" value="events" href="#"> Events </button></li>
+            </ul>
+        </div>
+        <div id="main-game-panel">
+        </div>
+    </div>
+
+    <button onclick="gameApp.logOut()">logOut</button>
+    <script src="js/fireBase.js"></script>
+    <script src="jquery/left_panel.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/hero.js"></script>
+</body>
+</html>

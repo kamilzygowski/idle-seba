@@ -1,59 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <meta charset="UTF-8">
-    <title> Idle Seba </title>
-</head>
-
-<body>
-    <div id="game">
-        <div id="left-options">
-            <ul>
-                <li><button class="left_panel_button" value="myprofile" type="button" href="#"> My profile </button></li>
-                <li><button class="left_panel_button" value="tavern" type="button" href="#"> Tavern </button></li>
-                <li><button class="left_panel_button" value="shop" type="button" href="#"> Shop </button></li>
-                <li><button class="left_panel_button" value="stable" type="button" href="#"> Stable </button></li>
-                <li><button class="left_panel_button" value="dungeon" type="button" href="#"> Dungeon </button></li>
-                <li><button class="left_panel_button" value="events" href="#"> Events </button></li>
-            </ul>
-        </div>
-        <div id="main-game-panel">
-        </div>
-    </div>
-
-    <script src="jquery/left_panel.js"></script>
-    <script src="js/functions.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/hero.js"></script>
-
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <!-- FIREBASE -->
     <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase.js"></script>
 
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  var firebaseConfig = {
-    apiKey: "AIzaSyBCD99clVZrJYf7OfhJVUlCajE5JoQHZH8",
-    authDomain: "sd-heroes.firebaseapp.com",
-    projectId: "sd-heroes",
-    storageBucket: "sd-heroes.appspot.com",
-    messagingSenderId: "815968900837",
-    appId: "1:815968900837:web:da80ccecb28b93f49ae60c",
-    measurementId: "G-JRW2KKE1FC"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script>
-
-
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />   
+    
+    
+</head>
+<body>
+<h1>SD Heroes</h1>
+<div id="firebaseui-auth-container"></div>
+    <script src='js/fireBase.js'></script>
+    <script src='js/index.js'></script>
 </body>
 </html>

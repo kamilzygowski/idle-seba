@@ -1,6 +1,7 @@
 class Hero {
-    constructor(name, avatar, x, y, dmg, health) {
-        this.name = name
+    constructor(id, name, avatar, x, y, dmg, health) {
+        this.id = id;
+        this.name = name;
         this.health = health;
         this.damage = dmg;
         this.x = x;
@@ -24,5 +25,9 @@ class Hero {
         ctx.drawImage(lol, this.x, this.y, 128, 128);
         ctx.fillStyle = "yellow";
         ctx.fillText(this.name + " " + this.health, this.x, this.y+150)  
+    }
+
+    walka(defender){
+        defender.health -= this.damage;
     }
 }
