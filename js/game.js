@@ -23,20 +23,20 @@ var gameApp = {};
     } 
 
     function gainLevel(value){
-      firebase.database().ref(loggedUser.uid).update({
+      firebase.database().ref(uid).update({
         level: value
       });
     }
 
     function gainSkill(value){
-      firebase.database().ref(loggedUser.uid).update({
+      firebase.database().ref(uid).update({
         skill: value
       });
     }
 
     async function getCharacterInfo(){
       var character_info = '';
-      await firebase.database().ref(loggedUser.uid).get().then((snapshot) => {
+      await firebase.database().ref(uid).get().then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val());
           character_info = snapshot.val();
@@ -51,8 +51,8 @@ var gameApp = {};
       return character_info;
     }
 
-    function createCharacter(){
-      firebase.database().ref(loggedUser.uid).set({
+    async function createCharacter(){
+      await firebase.database().ref(uid).set({
         name: document.getElementById('nameField').value,
         level: 0,
         skill: 0
