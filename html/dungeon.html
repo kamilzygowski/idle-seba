@@ -1,44 +1,105 @@
 <canvas id='dungeon' width='1400px' height='720px' style='border:1px solid grey'></canvas>
-<button id = 'hero1heal' style="position: absolute; top:300px; left:500px;">Ulecz</button>
-<button id = 'currentHeroHeal' style="position: absolute; top:300px; left:800px;">Ulecz</button>
+<button id = 'hero1heal' style="position: absolute; top:300px; left:800px;">Ulecz</button>
+<button id = 'hero1hit' style="position: absolute; top:350px; left:800px;">Uderz</button>
 
 <script>
     
-    hero1 = new Hero(0, "Maciek", 'images/jakis_lucznik.png', 100, 100, 8, 100)
-    hero2 = new Hero(1, "Seba", 'images/Avatar.png', 400, 100, 10, 90)
-    gameFrame = 0;
+    var turn = 0;
+    var currentHero = 0;
+    var selectedHero = "nobody";
+    selectedHero.name = "nobody";
+    var moved = false;
     var allHeroes = [];
+    var canvas = document.getElementById('dungeon');
+    var ctx = dungeon.getContext('2d');
+    var eventText = "";
+
+    hero4 = new Hero(3, "Paczek", 'images/jakis_lucznik.png', 100, 400, 8, 100)
+    hero1 = new Hero(0, "Maciek", 'images/jakis_lucznik.png', 100, 100, 8, 100)
+    hero2 = new Hero(1, "Seba", 'images/Avatar.png', 700, 100, 10, 90)
+    hero3 = new Hero(2, "Siusiak", 'images/Avatar.png', 700, 400, 10, 90)
+    
     allHeroes.push(hero1);
     allHeroes.push(hero2);
-    var currentHero = 0;
-    var selectedHero = 0;
-    var moved = false;
-
-    var ctx = dungeon.getContext('2d');
+    allHeroes.push(hero3);
+    allHeroes.push(hero4);
+   
     ctx.save();
     ctx.font = '24px Tahoma';
 
-    document.getElementById("hero1heal").addEventListener("click", function() {
-        hero1.health = hero1.maxHP;
-    },);
+    console.log(canvas);
+    
+    dungeonLoop();
 
-    document.getElementById("currentHeroHeal").addEventListener("click", function() {
-        allHeroes[1].health = allHeroes[1].maxHP;
-    },);
-    
-    
     function dungeonLoop(){
-        ctx.clearRect(0,0,dungeon.width,dungeon.height);
-        allHeroes[currentHero].walka(hero2);
+        ctx.clearRect(0,0,dungeon.width, dungeon.height);
         ctx.fillStyle = '#e67e22';   //marchewkowe tlo
         ctx.fillRect(0, 0, dungeon.width, dungeon.height);
-        hero1.update();
-        hero2.update();
-        hero1.draw(ctx);
-        hero2.draw(ctx);    
-        gameFrame++;
+        ctx.fillStyle = "yellow";
+        ctx.fillText("Teraz jest tura: " + allHeroes[currentHero].name,  280, 700)  
+        ctx.fillText("Wybrany bohater to: " + selectedHero.name,  700, 700)  
+        ctx.fillText(eventText,  700, 50)
+
+        allHeroes.forEach(hero => {
+            hero.update();
+            hero.draw(ctx);
+        });
+        
         requestAnimationFrame(dungeonLoop)
     }
 
-    dungeonLoop();
+    function nextTurn(){
+        currentHero += 1;
+        currentHero = currentHero % allHeroes.length;
+    }
+
+    let canvasPosition = canvas.getBoundingClientRect();
+    console.log(canvasPosition);
+    const mouse = {
+        x: canvas.width/2,
+        y: canvas.width/2,
+        click: false
+    }
+
+    function checkClick(x, y){
+        var imgSize = 128;
+        selectedHero.selected = false;
+        selectedHero = "nikt";
+        allHeroes.forEach(hero => {
+            if (x >= hero.x && x <= hero.x + imgSize && y >= hero.y && y <= hero.y + imgSize){
+                selectedHero = hero;
+                hero.selected = !hero.selected;
+            }
+        });
+        console.log(selectedHero);
+    }
+
+    canvas.addEventListener('mousedown', function(event){
+        mouse.x = event.x - canvasPosition.left;
+        mouse.y = event.y - canvasPosition.top;
+        console.log(mouse.x, mouse.y);
+        checkClick(mouse.x, mouse.y);
+    });
+
+    document.getElementById("hero1heal").addEventListener("click", function() {
+        if(selectedHero.name){
+            selectedHero.health += 10;      
+            eventText = allHeroes[currentHero].name + " uleczył " + selectedHero.name + " i przywrócił " + allHeroes[currentHero].damage + " punktów życia.";
+            nextTurn()
+        }
+        else {
+            alert("Musisz wybrać na kim zostanie użyta czynność");
+        }
+    },);
+
+    document.getElementById("hero1hit").addEventListener("click", function() {
+        if(selectedHero.name){
+            selectedHero.health -= allHeroes[currentHero].damage;
+            eventText = allHeroes[currentHero].name + " uderzył " + selectedHero.name + " i zadał " + allHeroes[currentHero].damage + " obrazen.";
+            nextTurn()
+        }
+        else {
+            alert("Musisz wybrać na kim zostanie użyta czynność");
+        }
+    },);
 </script>

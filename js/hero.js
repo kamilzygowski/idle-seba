@@ -9,6 +9,7 @@ class Hero {
         this.heroImg = avatar;
         this.maxHP = health;
         this.currentImg = avatar;
+        this.selected = false;
     }
     update(){
         if(this.health <= 0){
@@ -23,6 +24,12 @@ class Hero {
         var lol = new Image;
         lol.src = this.currentImg   
         ctx.drawImage(lol, this.x, this.y, 128, 128);
+        if(this.selected){
+            ctx.beginPath(); 
+            ctx.strokeStyle = '#f00';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(this.x, this.y, 128, 128);
+        }
         ctx.fillStyle = "yellow";
         ctx.fillText(this.name + " " + this.health, this.x, this.y+150)  
     }
