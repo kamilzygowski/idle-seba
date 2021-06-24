@@ -10,14 +10,20 @@ class Hero {
         this.maxHP = health;
         this.currentImg = avatar;
         this.selected = false;
+        this.spellX = x;
+        this.spellY = y;
+        this.spellSpeed = 8;
     }
-    update(){
+
+    update(ctx){
         if(this.health <= 0){
             this.currentImg = "images/dead_hero.png"
         }
         else {
             this.currentImg = this.heroImg;
         }
+
+        this.draw(ctx);
     }
 
     draw(ctx) {
@@ -34,7 +40,66 @@ class Hero {
         ctx.fillText(this.name + " " + this.health, this.x, this.y+150)  
     }
 
-    walka(defender){
-        defender.health -= this.damage;
+    castSpell(x, y){ 
+        //OBLICZENIE PO JAKIEJ "FUNKCJI" MA LECIEĆ SPELL
+        this.spellX = this.x;
+        this.spellY = this.y;
+        console.log(this.castSpell);
+        var a = 0;
+        var b = 0;
+        a = (this.spellY - y)/(this.spellX - x);
+        b = y - a*x;
+        console.log(a);
+        this.castSpell2(a,b,x,y);
+    }
+
+    castSpell2(a, b, x, y){
+        var vx = 0, vy = 0;
+        console.log("LECI SPELL");
+        if (x == this.spellX){
+            if( y < this.spellY){
+                vy = -1;
+            }
+            else if(y > this.spellY){
+                vy = 1;
+            }
+        }
+
+        else if(y == this.spellY){
+            if( x < this.spellX){
+                vx = -1;
+            }
+            else if(x > this.spellX){
+                vx = 1;
+            }
+        }
+
+        else if ( x < this.spellX){
+            vx = -1;
+            if( y < this.spellY){
+                vy = -a;
+            }
+            else if(y > this.spellY){
+                vy = Math.abs(a);
+            }
+        }
+        else if ( x > this.spellX){
+            vx = 1;
+            if( y < this.spellY){
+                vy = a;
+            }
+            else if(y > this.spellY){
+                vy = a;
+            }
+        }
+        this.spellY += vy*this.spellSpeed;
+        this.spellX += vx*this.spellSpeed;
+        
+        ctx.fillStyle = 'blue';   //marchewkowe tlo
+        ctx.fillRect(this.spellX, this.spellY, 100, 100);
+        
+        if( (this.spellX > x + this.spellSpeed || this.spellX < x - this.spellSpeed) || (this.spellY > y + this.spellSpeed || this.spellY < y - this.spellSpeed)){
+            requestAnimationFrame(()=>this.castSpell2(a, b, x, y));
+        }
     }
 }
