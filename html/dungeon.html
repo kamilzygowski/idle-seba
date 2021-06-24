@@ -34,7 +34,7 @@
 
     function dungeonLoop(){
         ctx.clearRect(0,0,dungeon.width, dungeon.height);
-        ctx.fillStyle = '#e67e22';   //marchewkowe tlo
+        ctx.fillStyle = 'lightblue';   //marchewkowe tlo
         ctx.fillRect(0, 0, dungeon.width, dungeon.height);
         ctx.fillStyle = "yellow";
         ctx.fillText("Teraz jest tura: " + allHeroes[currentHero].name,  280, 700)  
@@ -106,8 +106,9 @@
 
     document.getElementById("hero1spell").addEventListener("click", function() {
         if(selectedHero.name){
-            allHeroes[currentHero].castSpell(selectedHero.x, selectedHero.y);    
-            eventText = allHeroes[currentHero].name + " rzucił zaklęcie na  " + selectedHero.name + " i zadał " + allHeroes[currentHero].damage + " obrazen.";
+            allHeroes[currentHero].castSpell(selectedHero.x, selectedHero.y);  
+            selectedHero.health -= allHeroes[currentHero].spellDamage;  
+            eventText = allHeroes[currentHero].name + " rzucił zaklęcie na  " + selectedHero.name + " i zadał " + allHeroes[currentHero].spellDamage + " obrazen.";
             nextTurn()
         }
         else {

@@ -13,6 +13,7 @@ class Hero {
         this.spellX = x;
         this.spellY = y;
         this.spellSpeed = 8;
+        this.spellDamage = 15;
     }
 
     update(ctx){
@@ -94,9 +95,9 @@ class Hero {
         }
         this.spellY += vy*this.spellSpeed;
         this.spellX += vx*this.spellSpeed;
-        
-        ctx.fillStyle = 'blue';   //marchewkowe tlo
-        ctx.fillRect(this.spellX, this.spellY, 100, 100);
+        var spellImage = new Image;
+        spellImage.src = "images/test_spell1.png" 
+        ctx.drawImage(spellImage, this.spellX, this.spellY, 100, 100);
         
         if( (this.spellX > x + this.spellSpeed || this.spellX < x - this.spellSpeed) || (this.spellY > y + this.spellSpeed || this.spellY < y - this.spellSpeed)){
             requestAnimationFrame(()=>this.castSpell2(a, b, x, y));
