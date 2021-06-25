@@ -55,7 +55,10 @@ var gameApp = {};
       await firebase.database().ref(uid).set({
         name: document.getElementById('nameField').value,
         level: 0,
-        skill: 0
+        skill: 0,
+        gold: 50,
+        hp: 800
+
       });
       //TO TRZEBA ZROBIC TAK ZE JAK SIE WYSLE SUCCESFUL TO DOPIERO MA ZALADOWAC GAME.HTML
       window.location.replace("game.html");

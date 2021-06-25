@@ -4,133 +4,260 @@
 <canvas id='shop' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 <script>
 
-    var ctx = shop.getContext('2d');
-    ctx.font = '24px Tahoma';
-    
-    var shopDiv = document.getElementById('shopView');
-
-    var shopItem1;
-
-
-    var slotWindow = [{img: 'images/slotWindow.png', x:580, y:580, height:96, width:96},
-    {img: 'images/slotWindow.png', x:690, y:580, height:96, width:96},
-    {img: 'images/slotWindow.png', x:800, y:580, height:96, width:96},
-    {img: 'images/slotWindow.png', x:910, y:580, height:96, width:96},
-    {img: 'images/slotWindow.png', x:580, y:470, height:96, width:96},
-    {img: 'images/slotWindow.png', x:690, y:470, height:96, width:96},
-    {img: 'images/slotWindow.png', x:800, y:470, height:96, width:96},
-    {img: 'images/slotWindow.png', x:910, y:470, height:96, width:96}];
-    var shopSlot = [{x:580, y:100, height:96, width:96},
-    {x:690, y:100, height:96, width:96},
-    {x:800, y:100, height:96, width:96},
-    {x:910, y:100, height:96, width:96},
-    {x:580, y:210, height:96, width:96},
-    {x:690, y:210, height:96, width:96},
-    {x:800, y:210, height:96, width:96},
-    {x:910, y:210, height:96, width:96}
+var items = [
+  { id: '1', atk: '14', def: '4', spec: ' yikes ', price: '19', image: 'images/sword.png' },
+  { id: '2', atk: '1', def: '17', spec: ' ', price: '15', image: 'images/shield.png' }
 ];
+  var ctx = shop.getContext('2d');
+  ctx.font = '32px Tahoma';
+
+  var shopDiv = document.getElementById('shopView');
+  console.log(items);
 
 
-    slotWindowImg = new Image;
-    slotWindowImg.src = slotWindow[0].img;
-    heroAvatar = new Image;
-    heroAvatar.src = 'images/knightAvatar.png';
-    swordImg = new Image;
-    swordImg.src= 'images/sword.png';
+  var slotWindow = [{ img: 'images/slotWindow.png', x: 580, y: 580, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 690, y: 580, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 800, y: 580, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 910, y: 580, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 580, y: 470, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 690, y: 470, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 800, y: 470, height: 96, width: 96 },
+  { img: 'images/slotWindow.png', x: 910, y: 470, height: 96, width: 96 }];
+  var shopSlot = [{ x: 580, y: 100, height: 96, width: 96 },
+  { x: 690, y: 100, height: 96, width: 96 },
+  { x: 800, y: 100, height: 96, width: 96 },
+  { x: 910, y: 100, height: 96, width: 96 },
+  { x: 580, y: 210, height: 96, width: 96 },
+  { x: 690, y: 210, height: 96, width: 96 },
+  { x: 800, y: 210, height: 96, width: 96 },
+  { x: 910, y: 210, height: 96, width: 96 }
+  ];
 
-    ctx.fillStyle = '#e67e22';   //marchewkowy 
-    ctx.fillRect(0, 0, shop.width, shop.height);
 
-    ctx.fillText('Es', 255, 255);
+  slotWindowImg = new Image;
+  slotWindowImg.src = slotWindow[0].img;
+  heroAvatar = new Image;
+  heroAvatar.src = 'images/knightAvatar.png';
+  swordImg = new Image;
+  swordImg.src = 'images/sword.png';
 
-    testImg = new Image;
-    testImg.src = 'images/Avatar.png';
-    ctx.drawImage(testImg, 200, 100, 128, 128);
+  ctx.fillStyle = '#e67e22';   //marchewkowy 
+  ctx.fillRect(0, 0, shop.width, shop.height);
 
-    ctx.drawImage(heroAvatar, 200, 485 , 128, 128);
-    
-    
-    shopDiv.innerHTML += '<div id="shopItem1"><img src=' + '"images/sword.png"></div> ';
-    shopDiv.innerHTML += '<div id="shopItem2"><img src=' + '"images/shield.png"></div> ';
-    shopDiv.innerHTML += '<div id="shopItem3"><img src=' + '"images/sword.png"></div> ';
+  //character_info = gameApp.getCharacterInfo();
+  async function get_my_profile_info() {
+    character_info = await gameApp.getCharacterInfo();
 
-    dragElement(document.getElementById("shopItem1"));
-    dragElement(document.getElementById("shopItem2"));
-    dragElement(document.getElementById("shopItem3"));
-
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "shopItem1")) {
-    // if present, the shopView is where you move the DIV from:
-    document.getElementById(elmnt.id + "shopItem1").onmousedown = dragMouseDown;
-  } else {
-    // otherwise, move the DIV from anywhere inside the DIV:
-    elmnt.onmousedown = dragMouseDown;
+    var playerMoney = 'Money: ' + character_info.gold + ' $';
+    ctx.fillStyle = "indigo";
+    ctx.fillText(playerMoney, 185, 655);
   }
 
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
+  for (var i = 0; i <= 7; i++) {
+    ctx.drawImage(slotWindowImg, slotWindow[i].x, slotWindow[i].y, slotWindow[i].width, slotWindow[i].height);
+    ctx.drawImage(slotWindowImg, shopSlot[i].x, shopSlot[i].y, shopSlot[i].width, shopSlot[i].height);
+    shopDiv.innerHTML += '<div id="shopItem' + i + '" class="shopItem shopItem' + i + '"><img src=' + '"images/sword.png"></div> ';
+    shopDiv.innerHTML += '<div id="playerItem' + i + '" class="playerInventory playerItem' + i + '"></div> ';
+  }
+  
+  var playerInventoryDOM = shopDiv.querySelectorAll('.playerInventory');
+
+
+  get_my_profile_info();
+
+  ctx.fillText('Es', 255, 255);
+
+  testImg = new Image;
+  testImg.src = 'images/Avatar.png';
+  ctx.drawImage(testImg, 200, 100, 128, 128);
+
+  ctx.drawImage(heroAvatar, 200, 485, 128, 128);
+
+  /*shopDiv.innerHTML += '<div id="shopItem1"><img src=' + '"images/sword.png"></div> ';
+  shopDiv.innerHTML += '<div id="shopItem2"><img src=' + '"images/shield.png"></div> ';
+  shopDiv.innerHTML += '<div id="shopItem3"><img src=' + '"images/sword.png"></div> ';*/
+
+
+
+  function dragElement(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    if (document.getElementById(elmnt.id + "shopItem1")) {
+      // if present, the shopView is where you move the DIV from:
+      document.getElementById(elmnt.id + "shopItem1").onmousedown = dragMouseDown;
+    } else {
+      // otherwise, move the DIV from anywhere inside the DIV:
+      elmnt.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      // get the mouse cursor position at startup:
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      // call a function whenever the cursor moves:
+      document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+      e = e || window.event;
+      e.preventDefault();
+      // calculate the new cursor position:
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      // set the element's new position:
+      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+      // stop moving when mouse button is released:
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
   }
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
+var emptySlot;
 
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
+  function emptyPlayerSlot() {
+for (var slot in playerInventoryDOM){
+  var inventory = playerInventoryDOM[slot];
+  if (inventory.className == 'playerInventory playerItem' + slot){
+    emptySlot = inventory;
+    console.log(inventory.className == 'playerInventory playerItem' + slot);
+    console.log(emptySlot.id);
+    inventory.classList.add('taken');
+    break;
   }
 }
 
+}
 
+  /*dragElement(document.getElementById("shopItem1"));
+  dragElement(document.getElementById("shopItem2"));
+  dragElement(document.getElementById("shopItem3"));*/
 
-    for(var i=0;i<=8;i++){
-        ctx.drawImage(slotWindowImg, slotWindow[i].x , slotWindow[i].y ,slotWindow[i].width, slotWindow[i].height);
-        ctx.drawImage(slotWindowImg, shopSlot[i].x , shopSlot[i].y ,shopSlot[i].width, shopSlot[i].height);
-    }
+  var shopItems = document.querySelectorAll('.shopItem');
 
-   // setInterval(function(){
-        
-   // },1000/60);
+  for (var id in shopItems) {
+    var shopItem = shopItems[id];
+    shopItems[id].addEventListener('click', function () {
+      console.log('huj');
+      emptyPlayerSlot();
+      this.className = '';
+      this.classList.add(emptySlot.id);
+    });
+  }
 
-   console.log('shopitem1',shopItem1);
+  // setInterval(function(){
+
+  // },1000/60);
+
+  console.log('shopitem1', shopItem1);
 
 </script>
 
 <style>
+  .shopItem0 {
+    position: absolute;
+    left: 585px;
+    top: 105px;
+  }
 
-    #shopItem1 {
-        position:absolute;
-        left:585px;
-        top:105px;
-    }
+  .shopItem1 {
+    position: absolute;
+    left: 695px;
+    top: 105px;
+  }
 
-    #shopItem2 {
-        position: absolute;
-        left:695px;
-        top:105px;
-    }
+  .shopItem2 {
+    position: absolute;
+    left: 805px;
+    top: 105px;
+  }
 
-    #shopItem3 {
-        position: absolute;
-        left:805px;
-        top:105px;
-    }
+  .shopItem3 {
+    position: absolute;
+    left: 915px;
+    top: 105px;
+  }
+
+  .shopItem4 {
+    position: absolute;
+    left: 585px;
+    top: 215px;
+  }
+
+  .shopItem5 {
+    position: absolute;
+    left: 695px;
+    top: 215px;
+  }
+
+  .shopItem6 {
+    position: absolute;
+    left: 805px;
+    top: 215px;
+  }
+
+  .shopItem7 {
+    position: absolute;
+    left: 915px;
+    top: 215px;
+  }
+
+  .playerItem0 {
+    position: absolute;
+    left: 585px;
+    top: 585px;
+  }
+
+  .playerItem1 {
+    position: absolute;
+    left: 695px;
+    top: 585px;
+  }
+
+  .playerItem2 {
+    position: absolute;
+    left: 805px;
+    top: 585px;
+  }
+
+  .playerItem3 {
+    position: absolute;
+    left: 915px;
+    top: 585px;
+  }
+
+  .playerItem4 {
+    position: absolute;
+    left: 585px;
+    top: 475px;
+  }
+
+  .playerItem5 {
+    position: absolute;
+    left: 695px;
+    top: 475px;
+  }
+
+  .playerItem6 {
+    position: absolute;
+    left: 805px;
+    top: 475px;
+  }
+
+  .playerItem7 {
+    position: absolute;
+    left: 915px;
+    top: 475px;
+  }
+
+  .none {
+    display: none;
+  }
 </style>
