@@ -27,8 +27,6 @@
         blackMarketHTML: '<img id="' + 'blackMarket" ' + 'src="images/blackMarket.png"' + ' style="position:absolute">'
     };
 
-
-
     ctx.fillStyle = '#3498db';   //inny niebieski
     ctx.fillRect(0, 0, tavern.width, tavern.height);
     ctx.drawImage(tavernBackground, 0, 0, tavern.width, tavern.height);
@@ -110,10 +108,10 @@
             console.log('okienko pojawia sie');
 
             document.getElementById('xButton').addEventListener('click', closeWindow);
-
-
         });
     }
+
+    returnToBasicState();
 
 
     //closeButtonObj.addEventListener('click', closeWindow);
@@ -125,7 +123,7 @@
             });
 
         } 
-
+        
         if (document.getElementById('blackMarket') !== null) {
             document.getElementById('blackMarket').addEventListener('mouseenter', e => {
                 addBlackMarket();
@@ -134,11 +132,7 @@
         } 
 
 
-    }, 500 / 60);
-
-
-
-
+    }, 250 / 60);
 
     /* gamblerObj.addEventListener('click', function(){
          console.log('klik');

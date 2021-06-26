@@ -5,9 +5,9 @@
 <script>
 
   var items = [
-    { id: '0', atk: '14', def: '4', spec: ' yikes ', price: '19', image: 'images/sword.png' },
-    { id: '1', atk: '1', def: '17', spec: ' def +2', price: '15', image: 'images/shield.png' },
-    { id: '2', atk: '31', def: '2', spec: ' smigielsky ', price: '24', image: 'images/spear.png' }
+    { id: '0', atk: '14', def: '4', spec: ' yikes ', price: '19', image: 'images/sword.png', name: 'Bread Sword' },
+    { id: '1', atk: '1', def: '17', spec: ' def +2', price: '15', image: 'images/shield.png', name:'Novice Shield' },
+    { id: '2', atk: '31', def: '2', spec: ' smigielsky ', price: '24', image: 'images/spear.png', name: "Panda's Spear" }
   ];
   var ctx = shop.getContext('2d');
   ctx.font = '32px Tahoma';
@@ -199,9 +199,9 @@
       ctx.fillText( ' price: ' + items[itemId].price , 1030, event.clientY + 64)
       ctx.fillText(' speciality: ' + items[itemId].spec,  1030, event.clientY + 96)
      */
-     shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>'+ 'Item stats:' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Def: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
+     shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>'+ '* ' + items[itemId].name +' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
       this.addEventListener('mouseleave', function(){ 
-        shopDiv.querySelector('.itemDescription').innerHTML = 'Hover items to see stats here!';
+        shopDiv.querySelector('.itemDescription').innerHTML = '<p>Hover items to see stats here!</p>';
       })
     });
   }
@@ -218,9 +218,9 @@
 
   .itemDescription{
     position: absolute;
-    left:1050px;
-    top:200px;
-    font-size: 32px;
+    left:1080px;
+    top:170px;
+    font-size: 34px;
   }
   .shopItem0 {
     position: absolute;
