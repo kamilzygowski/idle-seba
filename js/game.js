@@ -34,6 +34,18 @@ var gameApp = {};
       });
     }
 
+    function updateMoney(value){
+      firebase.database().ref(uid).update({
+        gold: value
+      });
+    }
+
+    function updateInventory(value){
+      firebase.database().ref(uid).update({
+        inventory: value
+      });
+    }
+
     async function getCharacterInfo(){
       var character_info = '';
       await firebase.database().ref(uid).get().then((snapshot) => {
@@ -57,7 +69,8 @@ var gameApp = {};
         level: 0,
         skill: 0,
         gold: 50,
-        hp: 800
+        hp: 800,
+        inventory:[],
 
       });
       //TO TRZEBA ZROBIC TAK ZE JAK SIE WYSLE SUCCESFUL TO DOPIERO MA ZALADOWAC GAME.HTML
@@ -69,5 +82,7 @@ var gameApp = {};
     gameApp.logOut = logOut;
     gameApp.gainLevel = gainLevel;
     gameApp.gainSkill = gainSkill;
+    gameApp.updateMoney = updateMoney;
+    gameApp.updateInventory = updateInventory;
 })()
 

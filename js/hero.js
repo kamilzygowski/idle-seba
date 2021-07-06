@@ -1,5 +1,5 @@
 class Hero {
-    constructor(id, name, avatar, x, y, dmg, health) {
+    constructor(id, name, avatar, x, y, dmg, health, inventory) {
         this.id = id;
         this.name = name;
         this.health = health;
@@ -14,6 +14,7 @@ class Hero {
         this.spellY = y;
         this.spellSpeed = 8;
         this.spellDamage = 15;
+        this.inventory = [];
     }
 
     update(ctx){

@@ -1,18 +1,21 @@
 <div id='shopView' style="position:absolute; width:1400px; height:720px; ">
-<div class='itemDescription'><p>Hover items to see stats here!</p></div>
+  <div class='itemDescription'>
+    <p>Hover items to see stats here!</p>
+  </div>
 </div>
 <canvas id='shop' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 <script>
 
   var items = [
-    { id: '0', atk: '14', def: '4', spec: ' yikes ', price: '19', image: 'images/sword.png', name: 'Bread Sword' },
-    { id: '1', atk: '1', def: '17', spec: ' def +2', price: '15', image: 'images/shield.png', name:'Novice Shield' },
-    { id: '2', atk: '31', def: '2', spec: ' smigielsky ', price: '24', image: 'images/spear.png', name: "Panda's Spear" }
+    { id: '0', atk: '14', def: '4', spec: ' yikes ', price: 19, image: 'images/sword.png', name: 'Bread Sword' },
+    { id: '1', atk: '1', def: '17', spec: ' def +2', price: 15, image: 'images/shield.png', name: 'Novice Shield' },
+    { id: '2', atk: '31', def: '2', spec: ' smigielsky ', price: 24, image: 'images/spear.png', name: "Panda's Spear" }
   ];
   var ctx = shop.getContext('2d');
   ctx.font = '32px Tahoma';
 
   var rng;
+
 
   var shopDiv = document.getElementById('shopView');
 
@@ -49,9 +52,10 @@
   //character_info = gameApp.getCharacterInfo();
   async function get_my_profile_info() {
     character_info = await gameApp.getCharacterInfo();
-
+    ctx.clearRect(185, 625, 210, 40);
     var playerMoney = 'Money: ' + character_info.gold + ' $';
-    ctx.fillStyle = "indigo";
+    ctx.font = '600 30px Arial';
+    ctx.fillStyle = "#341f97";
     ctx.fillText(playerMoney, 185, 655);
   }
 
@@ -67,19 +71,16 @@
 
 
   get_my_profile_info();
+  console.log(character_info.inventory);
 
-  ctx.fillText('Es', 255, 255);
+  ctx.fillStyle = '#ff9ff3';
+  ctx.fillText('Marshall, the shopkeeper', 115, 266);
 
   testImg = new Image;
   testImg.src = 'images/Avatar.png';
   ctx.drawImage(testImg, 200, 100, 128, 128);
 
   ctx.drawImage(heroAvatar, 200, 485, 128, 128);
-
-  /*shopDiv.innerHTML += '<div id="shopItem1"><img src=' + '"images/sword.png"></div> ';
-  shopDiv.innerHTML += '<div id="shopItem2"><img src=' + '"images/shield.png"></div> ';
-  shopDiv.innerHTML += '<div id="shopItem3"><img src=' + '"images/sword.png"></div> ';*/
-
 
 
   function dragElement(elmnt) {
@@ -123,6 +124,9 @@
     }
   }
 
+
+  /* Randomize items from 0 to 2 */
+
   function randomizedItems() {
     rng = Math.floor(Math.random() * 3);
     return rng;
@@ -145,33 +149,37 @@
 
 
   var emptySlot;
+  var taken = false;
 
   function emptyPlayerSlot() {
     for (var slot in playerInventoryDOM) {
-      var inventory = playerInventoryDOM[slot];
-      if (inventory.className == 'playerInventory playerItem' + slot) {
-        emptySlot = inventory;
-        // console.log(inventory.className == 'playerInventory playerItem' + slot);
-        // console.log(emptySlot.id);
-        inventory.classList.add('taken');
-        break;
+      if (slot < 8) {
+        var inventory = playerInventoryDOM[slot];
+        //console.log(inventory);
+        if (inventory.className == 'playerInventory playerItem' + slot) {
+          emptySlot = inventory;
+          inventory.classList.add('taken');
+          break;
+
+        } else if (slot == 8) {
+          var inventory = playerInventoryDOM[slot];
+          //console.log(inventory);
+          if (inventory.className == 'playerInventory playerItem' + slot) {
+            emptySlot = inventory;
+            //console.log(emptySlot);
+            // console.log(inventory.className == 'playerInventory playerItem' + slot);
+            // console.log(emptySlot.id);
+            inventory.classList.add('taken');
+            taken = true;
+
+            break;
+
+          } else if (slot == 8 && taken) {
+            break;
+          }
+        }
       }
     }
-  }
-
- /* function statsWindow(x, y) {
-    ctx.beginPath();
-    ctx.lineWidth = "10";
-    ctx.fillStyle = "blue";
-    ctx.rect(x - 400, y, 110,210);
-    ctx.fill();
-    ctx.fillText('Es',x - 400, y);
-
-  }*/
-  function statsWindow(x, y) {
-
-
-
   }
 
   /*dragElement(document.getElementById("shopItem1"));
@@ -180,48 +188,56 @@
 
   var shopItems = document.querySelectorAll('.shopItem');
 
+  /* Transfer item to the inventory slots */
+
+
   for (var id in shopItems) {
+
     var shopItem = shopItems[id];
     shopItems[id].addEventListener('click', function () {
-      console.log('huj');
+      //  console.log(parseInt(this.children.shopImg.classList));   <== tp jest czyste id wyjętegp itemu od sklepikarza 
+      //console.log('huj');
+      var itemPrice = items[parseInt(this.children.shopImg.classList)].price;
+      if (itemPrice <= character_info.gold) {
+      var updatedGold = character_info.gold - itemPrice;
+      gameApp.updateMoney(updatedGold);
+      get_my_profile_info();
       emptyPlayerSlot();
-      this.className = '';
       this.classList.add(emptySlot.id);
-    });
+      } else 
+      window.alert('you dont have enough money');
+    }
+
+    );
+
+
+
+    /* Hover on item to see its stats  */
+
     shopItems[id].addEventListener('mouseover', function (event) {
       var itemId = this.children.shopImg.getAttribute('class');
-      statsWindow(event.clientX, event.clientY);
-      console.log(id);
+      //statsWindow(event.clientX, event.clientY);
+      // console.log(id);
       var itemDescription = 'Item stats = Attack: ' + items[itemId].atk + ' Def: ' + items[itemId].def + ' Price: ' + items[itemId].price + ' Speciality: ' + items[itemId].spec;
-      console.log('Item stats: attack: ' + items[itemId].atk + ' def: ' + items[itemId].def + ' price: ' + items[itemId].price + ' speciality: ' + items[itemId].spec);
-/*      ctx.fillText('Item stats: attack: ' + items[itemId].atk,1030, event.clientY);
-      ctx.fillText(' def: ' + items[itemId].def, 1030, event.clientY + 32);
-      ctx.fillText( ' price: ' + items[itemId].price , 1030, event.clientY + 64)
-      ctx.fillText(' speciality: ' + items[itemId].spec,  1030, event.clientY + 96)
-     */
-     shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>'+ '* ' + items[itemId].name +' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
-      this.addEventListener('mouseleave', function(){ 
+      // console.log('Item stats: attack: ' + items[itemId].atk + ' def: ' + items[itemId].def + ' price: ' + items[itemId].price + ' speciality: ' + items[itemId].spec);
+      shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>' + '* ' + items[itemId].name + ' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
+      this.addEventListener('mouseleave', function () {
         shopDiv.querySelector('.itemDescription').innerHTML = '<p>Hover items to see stats here!</p>';
       })
     });
   }
 
-  // setInterval(function(){
-
-  // },1000/60);
-
-  console.log('shopitem1', shopItem1);
 
 </script>
 
 <style>
-
-  .itemDescription{
+  .itemDescription {
     position: absolute;
-    left:1080px;
-    top:170px;
+    left: 1080px;
+    top: 170px;
     font-size: 34px;
   }
+
   .shopItem0 {
     position: absolute;
     left: 585px;
