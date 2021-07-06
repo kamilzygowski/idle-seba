@@ -1,0 +1,81 @@
+<canvas id='collection' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+<button id = 'randomHero' style="position: absolute; top:350px; left:500px;">RANDOM HERO</button>
+
+<script>
+    var canvas = document.getElementById('collection');
+    var ctx = collection.getContext('2d');
+    ctx.save();
+    ctx.font = '24px Tahoma';
+    var ownedHeros = [];
+    allHeros = [1,2,3,4];
+
+    async function cappa(){
+        console.log("PRZED ZEBRANIEM DANYCH");
+        ownedHeros = await gameApp.getOwnedHeros();
+        console.log("PO ZEBRANIU DANYCH");
+        var request = new XMLHttpRequest();
+        request.open("GET","json/hero.json", false);
+        request.send(null);
+        var herosInfo = JSON.parse(request.responseText);
+        console.log(herosInfo[1].avatar);
+
+        for(var i = 0; i < ownedHeros.length; i++){
+            //sprawdzac id kazdego herosa i zamiast szarego kwadrata rysowac jego avatar
+            createImage(i, herosInfo[ownedHeros[i]].avatar, herosInfo[ownedHeros[i]].name);
+        }        
+        
+    }
+    cappa();
+
+    function createImage(i, src, name){   // load an image function 
+                           // creates a new i each time it is called
+    var image = new Image();  // create a new image variable 
+    image.src = src;
+    image.onload = function(){  // now the onload will have the correct variables 
+        ctx.drawImage(image, 128*(i+1), 128, 128, 128); 
+        ctx.fillText(name, 128*(i+1), 280);
+    } 
+
+ }
+
+    document.getElementById("randomHero").addEventListener("click", function() {
+        //ale chujowa dokumnetacja do poprawy
+        //wylosujBohateraKtoregoNieMa();
+        wylosujBohateraKtoregoNieMa();
+        //gameApp.unlockHero(2);
+        
+    },);
+
+    async function wylosujBohateraKtoregoNieMa(){
+        var notOwnedHeros = [];
+        notOwnedHeros = allHeros.filter(n => !ownedHeros.includes(n));
+
+        if (notOwnedHeros.length != 0){
+            var newHero = notOwnedHeros[Math.floor(Math.random()*notOwnedHeros.length)];
+            console.log(newHero);
+            await gameApp.unlockHero(newHero);
+            
+        }
+        else{
+            alert("Juz masz wszystkich heros!");
+        }
+
+        cappa();
+
+        //cappa();
+        //i z tego losowac sobie ^
+
+        // MAMMA MIA
+        //1 2 3 4
+       // ^   ^ 
+
+        //cala pula z ktorej losujemy to bylo 
+        //ile mamy hero 
+        //jakie juz mamy
+        //i wtedy losowac z reszty
+        //a jak wszystkime juz mamy to dac komunikat ze mamy wszystkie
+        //wogole mam ochote se narysowac kilku nowych
+        //streeam z rysowania bedzie
+    }
+
+</script>

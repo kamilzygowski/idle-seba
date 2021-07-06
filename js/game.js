@@ -45,6 +45,30 @@ var gameApp = {};
         inventory: value
       });
     }
+    
+    async function unlockHero(id){
+      ownedHeros = await getOwnedHeros();
+      //ownedHeros = [];
+      ownedHeros.push(id);
+      firebase.database().ref(uid + "/ownedHeros").set(ownedHeros);
+    }
+
+    async function getOwnedHeros(){
+      var ownedHeros = [];
+      await firebase.database().ref(uid + "/ownedHeros").get().then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          ownedHeros = snapshot.val();
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      console.log("NAAAA");
+      return ownedHeros;
+    }
 
     async function getCharacterInfo(){
       var character_info = '';
@@ -71,7 +95,7 @@ var gameApp = {};
         gold: 50,
         hp: 800,
         inventory:[],
-
+        ownedHeros: []
       });
       //TO TRZEBA ZROBIC TAK ZE JAK SIE WYSLE SUCCESFUL TO DOPIERO MA ZALADOWAC GAME.HTML
       window.location.replace("game.html");
@@ -84,5 +108,7 @@ var gameApp = {};
     gameApp.gainSkill = gainSkill;
     gameApp.updateMoney = updateMoney;
     gameApp.updateInventory = updateInventory;
+    gameApp.unlockHero = unlockHero;
+    gameApp.getOwnedHeros = getOwnedHeros;
 })()
 
