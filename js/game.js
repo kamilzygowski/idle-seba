@@ -45,6 +45,13 @@ var gameApp = {};
       inventory.push(value);
       firebase.database().ref(uid + "/inventory").set(inventory);
     }
+
+    async function removeFromInventory(value){
+      inventory = await getInventory();
+      var pos = inventory.indexOf(value);
+      inventory.splice(pos,1);
+      firebase.database().ref(uid + "/inventory").set(inventory);
+    }
     
     async function unlockHero(id){
       ownedHeros = await getOwnedHeros();
@@ -82,7 +89,7 @@ var gameApp = {};
       }).catch((error) => {
         console.error(error);
       });
-      
+
       return inventory;
     }
 
@@ -126,5 +133,6 @@ var gameApp = {};
     gameApp.unlockHero = unlockHero;
     gameApp.getOwnedHeros = getOwnedHeros;
     gameApp.updateInventory = updateInventory;
+    gameApp.removeFromInventory = removeFromInventory;
 })()
 
