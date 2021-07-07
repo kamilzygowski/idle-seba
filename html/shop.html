@@ -12,14 +12,9 @@
     { id: '2', atk: '31', def: '2', spec: ' smigielsky ', price: 24, image: 'images/spear.png', name: "Panda's Spear" }
   ];
   var ctx = shop.getContext('2d');
-  ctx.font = '32px Tahoma';
-
   var rng;
-
-
   var shopDiv = document.getElementById('shopView');
-
-
+  var playerInventory;
   var slotWindow = [{ img: 'images/slotWindow.png', x: 580, y: 580, height: 96, width: 96 },
   { img: 'images/slotWindow.png', x: 690, y: 580, height: 96, width: 96 },
   { img: 'images/slotWindow.png', x: 800, y: 580, height: 96, width: 96 },
@@ -46,16 +41,18 @@
   swordImg = new Image;
   swordImg.src = 'images/sword.png';
 
+  ctx.font = '32px Tahoma';
   ctx.fillStyle = '#e67e22';   //marchewkowy 
   ctx.fillRect(0, 0, shop.width, shop.height);
 
   //character_info = gameApp.getCharacterInfo();
   async function get_my_profile_info() {
     character_info = await gameApp.getCharacterInfo();
-    ctx.clearRect(185, 625, 210, 40);
+    //ctx.clearRect(185, 625, 210, 40);
+    ctx.drawImage(slotWindowImg,175, 625, 220, 40 );
     var playerMoney = 'Money: ' + character_info.gold + ' $';
     ctx.font = '600 30px Arial';
-    ctx.fillStyle = "#341f97";
+    ctx.fillStyle = "#fbc531";
     ctx.fillText(playerMoney, 185, 655);
   }
 
@@ -65,13 +62,12 @@
     shopDiv.innerHTML += '<div id="shopItem' + i + '" class="shopItem shopItem' + i + '"><img src="' + items[randomizedItems()].image + '" id="shopImg" class=""></div> ';
     shopDiv.innerHTML += '<div id="playerItem' + i + '" class="playerInventory playerItem' + i + '"></div> ';
   }
-  getItemId();
 
   var playerInventoryDOM = shopDiv.querySelectorAll('.playerInventory');
 
 
-  get_my_profile_info();
-  console.log(character_info.inventory);
+  init(); 
+
 
   ctx.fillStyle = '#ff9ff3';
   ctx.fillText('Marshall, the shopkeeper', 115, 266);
@@ -83,11 +79,11 @@
   ctx.drawImage(heroAvatar, 200, 485, 128, 128);
 
 
-  function dragElement(elmnt) {
+  function dragElement(elmnt, id) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (document.getElementById(elmnt.id + "shopItem1")) {
+    if (document.getElementById(elmnt.id + id)) {
       // if present, the shopView is where you move the DIV from:
-      document.getElementById(elmnt.id + "shopItem1").onmousedown = dragMouseDown;
+      document.getElementBy(elmnt.id + id).onmousedown = dragMouseDown;
     } else {
       // otherwise, move the DIV from anywhere inside the DIV:
       elmnt.onmousedown = dragMouseDown;
@@ -132,6 +128,28 @@
     return rng;
   }
 
+  async function setInventory(){
+    //console.log("PRZED ZEBRANIEM DANYCH");
+     playerInventory = await gameApp.getInventory();
+     //console.log("PO ZEBRANIU DANYCH");
+     //console.log(playerInventory);
+     for(var i = 0; i<8 ; i++){
+      if(playerInventory != undefined && playerInventory[i] != undefined){
+        var playerItems = '<img src="' + items[playerInventory[i]].image + '" id="shopImg" class="' + playerInventory[i] + '">';
+        playerInventoryDOM[i].innerHTML += playerItems;
+        playerInventoryDOM[i].classList.add('taken');
+        
+      } else {
+
+        
+      }
+    }
+  }
+
+  async function drawInventoryItems(){
+   
+  }
+
   function getItemId() {
     var imgDiv = shopDiv.querySelectorAll('#shopImg');
     var shopSlotDiv = shopDiv.querySelectorAll('.shopItem');
@@ -159,6 +177,7 @@
         if (inventory.className == 'playerInventory playerItem' + slot) {
           emptySlot = inventory;
           inventory.classList.add('taken');
+
           break;
 
         } else if (slot == 8) {
@@ -168,7 +187,7 @@
             emptySlot = inventory;
             //console.log(emptySlot);
             // console.log(inventory.className == 'playerInventory playerItem' + slot);
-            // console.log(emptySlot.id);
+            console.log(emptySlot);
             inventory.classList.add('taken');
             taken = true;
 
@@ -182,9 +201,9 @@
     }
   }
 
-  /*dragElement(document.getElementById("shopItem1"));
+  dragElement(document.getElementById("shopItem1"));
   dragElement(document.getElementById("shopItem2"));
-  dragElement(document.getElementById("shopItem3"));*/
+  dragElement(document.getElementById("shopItem3"));
 
   var shopItems = document.querySelectorAll('.shopItem');
 
@@ -192,7 +211,6 @@
 
 
   for (var id in shopItems) {
-
     var shopItem = shopItems[id];
     shopItems[id].addEventListener('click', function () {
       //  console.log(parseInt(this.children.shopImg.classList));   <== tp jest czyste id wyjętegp itemu od sklepikarza 
@@ -204,6 +222,9 @@
       get_my_profile_info();
       emptyPlayerSlot();
       this.classList.add(emptySlot.id);
+      gameApp.updateInventory((this.children.shopImg.classList.value));
+      console.log((this.children.shopImg.classList.value));
+      console.log( gameApp.updateInventory());
       } else 
       window.alert('you dont have enough money');
     }
@@ -220,12 +241,33 @@
       // console.log(id);
       var itemDescription = 'Item stats = Attack: ' + items[itemId].atk + ' Def: ' + items[itemId].def + ' Price: ' + items[itemId].price + ' Speciality: ' + items[itemId].spec;
       // console.log('Item stats: attack: ' + items[itemId].atk + ' def: ' + items[itemId].def + ' price: ' + items[itemId].price + ' speciality: ' + items[itemId].spec);
-      shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>' + '* ' + items[itemId].name + ' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
+      shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>' + '* ' + items[itemId].name + ' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> Sell: ' + Math.floor(items[itemId].price * 0.6) + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
+      this.addEventListener('mouseleave', function () {
+        shopDiv.querySelector('.itemDescription').innerHTML = '<p>Hover items to see stats here!</p>';
+      })
+    });
+
+    playerInventoryDOM[id].addEventListener('mouseover', function (event) {
+      var itemId = this.children.shopImg.getAttribute('class');
+      //statsWindow(event.clientX, event.clientY);
+      // console.log(id);
+      var itemDescription = 'Item stats = Attack: ' + items[itemId].atk + ' Def: ' + items[itemId].def + ' Price: ' + items[itemId].price + ' Speciality: ' + items[itemId].spec;
+      // console.log('Item stats: attack: ' + items[itemId].atk + ' def: ' + items[itemId].def + ' price: ' + items[itemId].price + ' speciality: ' + items[itemId].spec);
+      shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>' + '* ' + items[itemId].name + ' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> Sell: ' + Math.floor(items[itemId].price * 0.6) + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
       this.addEventListener('mouseleave', function () {
         shopDiv.querySelector('.itemDescription').innerHTML = '<p>Hover items to see stats here!</p>';
       })
     });
   }
+
+  function init(){
+    getItemId();
+  get_my_profile_info();
+  setInventory();
+  drawInventoryItems();
+
+  }
+  
 
 
 </script>

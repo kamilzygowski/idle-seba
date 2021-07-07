@@ -1,3 +1,5 @@
-function walka(){
-    
-}
+
+    function walka() {
+        console.log('jajks');
+    }
+
