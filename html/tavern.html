@@ -17,8 +17,10 @@
         'Lets roll some dices, ayeeee'];
     var blackMarketText = ['essasasasa'];
 
+    var bet = playerMoney;
+
     var windows = {
-        poppingWindowHTML: '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>',
+        poppingWindowGambler: '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"><p id="windowText2"> How much you want to bet: </p><p class="bet">' + setBet() + ' $</p><input type="range" min="1" max="100" value="0" class="slider" id="myRange"></div>',
         poppingWindowBlackMarket: '<div id="poppingWindow"><p id="windowText"> ' + blackMarketText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>'
     };
 
@@ -49,30 +51,45 @@
 
     var tavernDiv = document.getElementById('tavernView');
     tavernDiv.innerHTML += characters.gamblerHTML /*+ '<img src="' + 'images/window.png"' + ' width="133" ' + 'height="333"' + 'style=" position:absolute">'*/;
-    // tavernDiv.innerHTML += windows.poppingWindowHTML;
+    // tavernDiv.innerHTML += windows.poppingWindowGambler;
 
 
     var gamblerObj = document.getElementById('gambler'),
         poppingWindowObj = document.getElementById('poppingWindow'),
         closeButtonObj = document.getElementById('xButton');
 
+    var character_info;
+    var playerMoney;
+
+        async function get_my_profile_info() {
+    character_info = await gameApp.getCharacterInfo();
+    playerMoney = character_info.gold;
+  }
+
+    init();
+
+    console.log(playerMoney);
+
     function returnToBasicState() {
         characters.gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + 'style="position:absolute">';
         characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket.png"' + ' style="position:absolute">';
         tavernDiv.innerHTML = '';
-        tavernDiv.innerHTML += characters.gamblerHTML;
-        tavernDiv.innerHTML += characters.blackMarketHTML;
-        console.log('returned');
+        addAllNPCS();
+        //console.log('returned');
     }
 
     function closeWindow() {
         tavernDiv.innerHTML = '';
-        tavernDiv.innerHTML += characters.gamblerHTML;
-        tavernDiv.innerHTML += characters.blackMarketHTML;
+        addAllNPCS();
         returnToBasicState();
         document.getElementById('gambler').addEventListener('mouseover', addGambler);
         document.getElementById('blackMarket').addEventListener('mouseover', addBlackMarket);
     };
+
+    function addAllNPCS() {
+        tavernDiv.innerHTML += characters.gamblerHTML;
+        tavernDiv.innerHTML += characters.blackMarketHTML;
+    }
 
 
     function addGambler() {
@@ -87,20 +104,36 @@
 
         document.getElementById('gambler').addEventListener('click', function () {
             tavernDiv.innerHTML = '';
-            tavernDiv.innerHTML += windows.poppingWindowHTML;
+            tavernDiv.innerHTML += windows.poppingWindowGambler;
             console.log('okienko pojawia sie');
 
+            
+
+
             document.getElementById('xButton').addEventListener('click', closeWindow);
-
         });
+    }
+    
 
-    };
+    function setBet(){
+        var gamblerSlider = document.querySelector('.slider');
+
+        if (gamblerSlider !== null){
+            bet = Math.ceil(playerMoney * gamblerSlider.value/100);
+            
+        } else {
+            bet = Math.ceil(playerMoney * 1/100);
+        }
+
+            return bet;
+
+    }
+
 
     function addBlackMarket() {
         characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket2.png"' + ' style="position:absolute">';
         tavernDiv.innerHTML = '';
-        tavernDiv.innerHTML += characters.blackMarketHTML;
-        tavernDiv.innerHTML += characters.gamblerHTML;
+        addAllNPCS();
 
         document.getElementById('blackMarket').addEventListener('click', function () {
             tavernDiv.innerHTML = '';
@@ -111,7 +144,10 @@
         });
     }
 
+    function init(){
+    get_my_profile_info();
     returnToBasicState();
+    }
 
 
     //closeButtonObj.addEventListener('click', closeWindow);
@@ -129,10 +165,20 @@
                 addBlackMarket();
                 document.getElementById('blackMarket').addEventListener('mouseleave', returnToBasicState);
             });
-        } 
+        }
 
+        var gamblerSlider = document.querySelector('.slider');
+        if (gamblerSlider !== null){
+        gamblerSlider.addEventListener('input',function(){
+            tavernDiv.innerHTML = '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"><p id="windowText2"> How much you want to bet: </p><p class="bet">' + setBet() + ' $</p><input type="range" min="1" max="100" value="' +gamblerSlider.value + '" class="slider" id="myRange"></div>';
+            document.getElementById('xButton').addEventListener('click', closeWindow);
+            
+            });
+        }
+            
 
-    }, 250 / 60);
+    });
+
 
     /* gamblerObj.addEventListener('click', function(){
          console.log('klik');
@@ -145,6 +191,14 @@
         tavernView.innerHTML = characters.gamblerHTML;
     }, 200);*/
 
+
+   /* if(document.querySelector('.slider') !== null){
+    gamblerSlider.addEventListener('click', setBet);
+    console.log(setBet);
+    } else {
+        
+    }
+*/
 
 
 </script>
@@ -207,6 +261,34 @@
         width: 840px;
         margin-top: 3%;
         font-size: 26px;
+        position: absolute;
+    }
+
+    #windowText2 {
+        color: #fff;
+        width: 840px;
+        margin-top: 15%;
+        font-size: 26px;
+        position: absolute;
+        text-align: center;
+    }
+
+    .bet {
+        color: lightgreen;
+        width: 840px;
+        margin-top: 15%;
+        font-size: 26px;
+        position: absolute;
+        text-align: center; 
+        margin-left: 35%;
+    }
+
+    #myRange {
+        margin-top: 21%;
+        margin-left: 0;
+        width:42%;
+        transition: opacity .2s;
+        cursor: pointer;
         position: absolute;
     }
 
