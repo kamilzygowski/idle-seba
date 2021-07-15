@@ -7,6 +7,8 @@
 <canvas id='tavern' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 <script>
 
+    init();
+
 
     var ctx = tavern.getContext('2d');
     ctx.font = '24px Tahoma';
@@ -18,9 +20,13 @@
     var blackMarketText = ['essasasasa'];
 
     var bet = playerMoney;
+    var playerChoseNumber = 0;
+    var sliderValue;
 
     var windows = {
-        poppingWindowGambler: '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"><p id="windowText2"> How much you want to bet: </p><p class="bet">' + setBet() + ' $</p><input type="range" min="1" max="100" value="0" class="slider" id="myRange"></div>',
+        poppingWindowGambler: '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm bet </button><img id="xButton' +
+            '" src="images/closeButton.png"><img src=' + '"images/window.png"><p id="windowText2"> How much you want to bet: </p><p class="bet">' + setBet() +
+            ' $</p><input type="range" min="1" max="100" value="0" class="slider" id="myRange"><img src="images/cube.png" id="cube"><div id="chooseNr"><div id="nr1" class="1">1</div><div id="nr2" class="2">2</div><div class="3" id="nr3">3</div><div id="nr4" class="4">4</div><div id="nr5" class="5">5</div><div id="nr6" class="6">6</div></div><p id="pickNrText">Choose your number: </p><p id="playerMoney">Money: ' + playerMoney + ' $</p><div id="gambleResult"></div></div>',
         poppingWindowBlackMarket: '<div id="poppingWindow"><p id="windowText"> ' + blackMarketText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>'
     };
 
@@ -61,14 +67,12 @@
     var character_info;
     var playerMoney;
 
-        async function get_my_profile_info() {
-    character_info = await gameApp.getCharacterInfo();
-    playerMoney = character_info.gold;
-  }
+    async function get_my_profile_info() {
+        character_info = await gameApp.getCharacterInfo();
+        playerMoney = character_info.gold;
+    }
 
-    init();
-
-    console.log(playerMoney);
+    returnToBasicState();
 
     function returnToBasicState() {
         characters.gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + 'style="position:absolute">';
@@ -91,6 +95,25 @@
         tavernDiv.innerHTML += characters.blackMarketHTML;
     }
 
+    /* Remove green background from previous chosen number and make it on the chosen */
+
+    function choosingGreenNumber() {
+        if (document.getElementById('chooseNr') !== null) {
+            document.getElementById('chooseNr').addEventListener('click', function (e) {
+                if (document.querySelector('#chooseNr') !== undefined) {
+                    for (i = 0; i < 6; i++) {
+                        document.querySelector('#chooseNr').children[i].classList.remove('pickedNumber');
+
+                    }
+                }
+                playerChoseNumber = e.target.className;
+                e.target.classList.add('pickedNumber');
+                return;
+            });
+
+        }
+    }
+
 
     function addGambler() {
 
@@ -106,29 +129,58 @@
             tavernDiv.innerHTML = '';
             tavernDiv.innerHTML += windows.poppingWindowGambler;
             console.log('okienko pojawia sie');
+            choosingGreenNumber();
 
-            
-
+            gamblingFuncs();
 
             document.getElementById('xButton').addEventListener('click', closeWindow);
         });
     }
-    
 
-    function setBet(){
-        var gamblerSlider = document.querySelector('.slider');
+    function gamblingFuncs() {
+        /* COFIRM BUTTON setup and gambling func */
 
-        if (gamblerSlider !== null){
-            bet = Math.ceil(playerMoney * gamblerSlider.value/100);
-            
-        } else {
-            bet = Math.ceil(playerMoney * 1/100);
+        if (document.getElementById('confirmButton') !== null) {
+            document.getElementById('confirmButton').addEventListener('click', function () {
+                sliderValue = document.querySelector('.slider').value;
+                var randomNumver = Math.floor(Math.random() * 6 + 1);
+
+                if (playerChoseNumber == randomNumver) {
+
+                    gameApp.updateMoney(playerMoney + bet * 5);
+                    document.getElementById('gambleResult').innerHTML = '<img id="gambleResult" src="images/win.png">';
+
+                } else {
+
+                    gameApp.updateMoney(playerMoney - bet);
+                    document.getElementById('gambleResult').innerHTML = '<img id="gambleResult" src="images/lose.png">';
+
+                }
+                get_my_profile_info();
+                document.querySelector('#playerMoney').innerHTML = 'Money: ' + playerMoney + ' $';
+                choosingGreenNumber();
+                document.getElementById('xButton').addEventListener('click', closeWindow);
+            });
+
         }
-
-            return bet;
 
     }
 
+
+    function setBet() {
+        var gamblerSlider = document.querySelector('.slider');
+
+        if (gamblerSlider !== null && gamblerSlider.value !== null) {
+            bet = Math.ceil(playerMoney * gamblerSlider.value / 100);
+            sliderValue = gamblerSlider.value;
+
+        } else {
+            bet = Math.ceil(playerMoney * 1 / 100);
+        }
+
+        return bet;
+
+    }
 
     function addBlackMarket() {
         characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket2.png"' + ' style="position:absolute">';
@@ -144,9 +196,9 @@
         });
     }
 
-    function init(){
-    get_my_profile_info();
-    returnToBasicState();
+    function init() {
+        get_my_profile_info();
+
     }
 
 
@@ -158,57 +210,48 @@
                 document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
             });
 
-        } 
-        
+        }
+
         if (document.getElementById('blackMarket') !== null) {
             document.getElementById('blackMarket').addEventListener('mouseenter', e => {
                 addBlackMarket();
                 document.getElementById('blackMarket').addEventListener('mouseleave', returnToBasicState);
             });
         }
-
         var gamblerSlider = document.querySelector('.slider');
-        if (gamblerSlider !== null){
-        gamblerSlider.addEventListener('input',function(){
-            tavernDiv.innerHTML = '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"><p id="windowText2"> How much you want to bet: </p><p class="bet">' + setBet() + ' $</p><input type="range" min="1" max="100" value="' +gamblerSlider.value + '" class="slider" id="myRange"></div>';
-            document.getElementById('xButton').addEventListener('click', closeWindow);
-            
+        if (gamblerSlider !== null && gamblerSlider.value !== null) {
+
+            gamblerSlider.addEventListener('input', function () {
+
+                document.querySelector('.bet').innerHTML = setBet() + '$';
+                //choosingGreenNumber();
+                document.getElementById('xButton').addEventListener('click', closeWindow);
+
             });
         }
-            
-
-    });
 
 
-    /* gamblerObj.addEventListener('click', function(){
-         console.log('klik');
-         //ctx.drawImage(window, tavern.width/2 - window.width/2, tavern.height/2 - window.height/2, widnow.width, widnow.height);
-         ctx.drawImage(window,0, 0, window.width, window.height);
-         ctx.drawImage(xButton, 22, 22, xButton.width, xButton.height);
-     });*/
-
-    /*setInterval(function(){
-        tavernView.innerHTML = characters.gamblerHTML;
-    }, 200);*/
+    }, 1 / 60000000);
 
 
-   /* if(document.querySelector('.slider') !== null){
-    gamblerSlider.addEventListener('click', setBet);
-    console.log(setBet);
-    } else {
-        
-    }
-*/
 
 
 </script>
 
 <style>
+    #gambleResult {
+        margin-left: 36%;
+        margin-top: 21%;
+        position: absolute;
+        width: 256px;
+        height: 192px;
+    }
+
     #gambler {
         display: flex;
         margin-left: 5%;
         margin-top: 26%;
-        width:134px;
+        width: 134px;
         height: 232px;
 
     }
@@ -279,14 +322,14 @@
         margin-top: 15%;
         font-size: 26px;
         position: absolute;
-        text-align: center; 
+        text-align: center;
         margin-left: 35%;
     }
 
     #myRange {
         margin-top: 21%;
         margin-left: 0;
-        width:42%;
+        width: 42%;
         transition: opacity .2s;
         cursor: pointer;
         position: absolute;
@@ -296,10 +339,71 @@
         position: absolute;
         width: 110px;
         height: 65px;
-        margin-top: 52%;
+        margin-top: 50%;
         background: url(images/cofirmButton.png) no-repeat;
 
         color: #fff;
 
+    }
+
+    #cube {
+        position: absolute;
+        width: 128px;
+        height: 128px;
+        margin-top: 28%;
+        margin-left: 15%;
+    }
+
+    #chooseNr {
+        position: absolute;
+        background-color: #fff;
+        width: 128px;
+        height: 192px;
+        margin-top: 28%;
+        margin-right: 15%;
+    }
+
+    #nr1,
+    #nr2,
+    #nr3,
+    #nr4,
+    #nr5,
+    #nr6 {
+        height: 24px;
+        width: 128px;
+        text-align: center;
+        font-weight: 700;
+        padding-top: 5%;
+        border: 1px solid black;
+    }
+
+
+    #nr1:hover,
+    #nr2:hover,
+    #nr3:hover,
+    #nr4:hover,
+    #nr5:hover,
+    #nr6:hover {
+        background-color: lightskyblue;
+    }
+
+    #pickNrText {
+        position: absolute;
+        color: #82ccdd;
+        margin-top: 35%;
+        margin-right: 55%;
+        font-size: 26px;
+    }
+
+    .pickedNumber {
+        background-color: #78e08f;
+    }
+
+    #playerMoney {
+        position: absolute;
+        font-size: 26px;
+        color: #fff;
+        margin-top: 52%;
+        margin-left: 46%;
     }
 </style>

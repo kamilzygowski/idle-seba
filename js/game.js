@@ -97,7 +97,7 @@ var gameApp = {};
       var character_info = '';
       await firebase.database().ref(uid).get().then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(snapshot.val());
+          //console.log(snapshot.val());
           character_info = snapshot.val();
         } else {
           console.log("No data available");
