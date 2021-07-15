@@ -120,7 +120,6 @@
         characters.gamblerHTML = '<img id="' + 'gambler" ' + 'src="images/Gambler2.png"' + 'style="position:absolute">';
         tavernDiv.innerHTML = '';
         tavernDiv.innerHTML += characters.gamblerHTML;
-        //ctx.drawImage(gambler2, 600, 300, gambler.width*2, gambler.height*2);
 
         characters.blackMarketHTML = '<img id="' + 'blackMarket" ' + 'src="images/blackMarket.png"' + ' style="position:absolute">';
         tavernDiv.innerHTML += characters.blackMarketHTML;
@@ -132,7 +131,6 @@
             choosingGreenNumber();
 
             gamblingFuncs();
-
             document.getElementById('xButton').addEventListener('click', closeWindow);
         });
     }
@@ -157,7 +155,7 @@
 
                 }
                 get_my_profile_info();
-                document.querySelector('#playerMoney').innerHTML = 'Money: ' + playerMoney + ' $';
+
                 choosingGreenNumber();
                 document.getElementById('xButton').addEventListener('click', closeWindow);
             });
@@ -173,13 +171,10 @@
         if (gamblerSlider !== null && gamblerSlider.value !== null) {
             bet = Math.ceil(playerMoney * gamblerSlider.value / 100);
             sliderValue = gamblerSlider.value;
-
         } else {
             bet = Math.ceil(playerMoney * 1 / 100);
         }
-
         return bet;
-
     }
 
     function addBlackMarket() {
@@ -198,18 +193,26 @@
 
     function init() {
         get_my_profile_info();
-
     }
 
-
-    //closeButtonObj.addEventListener('click', closeWindow);
     setInterval(function () {
+
+        /* Updating Player money */
+        if (document.querySelector('#playerMoney') !== null) {
+            document.querySelector('#playerMoney').innerHTML = 'Money: ' + playerMoney + ' $';
+        }
+
+        /* Updating bet of player */
+        if (document.querySelector('.bet') !== null) {
+            document.querySelector('.bet').innerHTML = setBet() + '$';
+        }
+
+        /* Hovering functions */
         if (document.getElementById('gambler') !== null) {
             document.getElementById('gambler').addEventListener('mouseenter', e => {
                 addGambler();
                 document.getElementById('gambler').addEventListener('mouseleave', returnToBasicState);
             });
-
         }
 
         if (document.getElementById('blackMarket') !== null) {
@@ -218,14 +221,16 @@
                 document.getElementById('blackMarket').addEventListener('mouseleave', returnToBasicState);
             });
         }
+
         var gamblerSlider = document.querySelector('.slider');
         if (gamblerSlider !== null && gamblerSlider.value !== null) {
 
             gamblerSlider.addEventListener('input', function () {
 
-                document.querySelector('.bet').innerHTML = setBet() + '$';
+
                 //choosingGreenNumber();
                 document.getElementById('xButton').addEventListener('click', closeWindow);
+
 
             });
         }
