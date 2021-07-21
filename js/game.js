@@ -54,10 +54,14 @@ var gameApp = {};
     }
     
     async function unlockHero(id){
-      ownedHeros = await getOwnedHeros();
-      //ownedHeros = [];
-      ownedHeros.push(id);
-      firebase.database().ref(uid + "/ownedHeros").set(ownedHeros);
+      var request = new XMLHttpRequest();
+      //pobranie info z pliku json o danym bohaterze
+      request.open("GET","json/hero.json", false);
+      request.send(null);
+      var herosInfo = JSON.parse(request.responseText);
+      console.log(herosInfo[id]);
+      //zapisanie w firebasie
+      firebase.database().ref(uid + "/ownedHeros/" + id ).update(herosInfo[id]);
     }
 
     async function getOwnedHeros(){
@@ -73,8 +77,16 @@ var gameApp = {};
         console.error(error);
       });
 
-      console.log("NAAAA");
-      return ownedHeros;
+      //tutaj wyjecie z info naszych bohaterow tylko ich id i wrzucenie do osobnej tablicy
+      var ownedHerosId = [];
+      for (var i = 0 ; i < 5; i ++){
+        if(ownedHeros[i]){
+          ownedHerosId.push(ownedHeros[i].id);
+        }
+      }
+         
+      console.log(ownedHerosId);
+      return ownedHerosId;
     }
 
     async function getInventory(){
@@ -117,7 +129,7 @@ var gameApp = {};
         gold: 50,
         hp: 800,
         inventory: [],
-        ownedHeros: []
+        ownedHeros: {}
       });
       //TO TRZEBA ZROBIC TAK ZE JAK SIE WYSLE SUCCESFUL TO DOPIERO MA ZALADOWAC GAME.HTML
       window.location.replace("game.html");

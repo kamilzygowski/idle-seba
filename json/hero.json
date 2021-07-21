@@ -2,21 +2,25 @@
     "1": {
         "id": 1,
         "name": "Kamilek",
-        "avatar": "images/Skull avatar.png"
+        "avatar": "images/Skull avatar.png",
+        "power": 1
     },
     "2": {
         "id": 2,
         "name": "Michalek",
-        "avatar": "images/jakis_lucznik.png"
+        "avatar": "images/jakis_lucznik.png",
+        "power": 2
     },
     "3": {
         "id": 3,
         "name": "Sebastianek",
-        "avatar": "images/knightAvatar.png"
+        "avatar": "images/knightAvatar.png",
+        "power": 1
     },
     "4": {
         "id": 4,
         "name": "Kasia",
-        "avatar": "images/Avatar.png"
+        "avatar": "images/Avatar.png",
+        "power": 2
     }
 }
