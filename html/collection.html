@@ -1,14 +1,18 @@
+<button id = 'randomHero' style="position: absolute; top:350px; left:650px;">RANDOM HERO</button>
+
 <div id="canvas-wrap">
     <canvas id='collection' width='1400px' height='720px' style='border:1px solid grey'></canvas>
     <div id='heroCard'>
-        <div id="poppingWindow"><p id="windowText">  
-        </p><button id="confirmButton"> confirm </button>
+        <div id="poppingWindow">
+        <p id="windowText" class="windowText desc"></p>
+        <p id="skillText" class="windowText power"></p>
+        <button id="confirmButton"> confirm </button>
         <img id="xButton" src="images/closeButton.png">
+        <img id="heroImg" src="">
         <img src="images/window.png"></div>
+        <button id = 'boostHero' style="position: absolute; top:350px; left:650px;">BOOST POWER</button>
     </div>
-</di>
-
-<button id = 'randomHero' style="position: absolute; top:350px; left:500px;">RANDOM HERO</button>
+</div>
 
 <script>
     var canvas = document.getElementById('collection');
@@ -19,31 +23,31 @@
     //wszyscy dostepni na ten moment bohaterowie w gierce, bedzie trzeba pewnie gdzies w jakis stalych dac
     allHeros = [1,2,3,4];
     myHeros = [];
+    //przetrzymujemy tutaj info o tym jaki okienko bohatera jest otwarte
+    var currentHeroCardOpen = -1;
 
-    async function cappa(){
+    async function collectionReload(){
         ctx.clearRect(0,0,collection.width, collection.height);
-        console.log("PRZED ZEBRANIEM DANYCH");
         ownedHeros = await gameApp.getOwnedHeros();
-        console.log("PO ZEBRANIU DANYCH");
+        
+        //tutaj zczytujemy podstawowe info oa kazdym bohaterze z jsona, mozna to tez sciagac z serwera teortetycznie ale do obgadania i przekminienia
         var request = new XMLHttpRequest();
         request.open("GET","json/hero.json", false);
         request.send(null);
         var herosInfo = JSON.parse(request.responseText);
-        console.log(herosInfo[1].avatar);
 
         for(var i = 0; i < ownedHeros.length; i++){
-            //sprawdzac id kazdego herosa i zamiast szarego kwadrata rysowac jego avatar
+            //sprawdzac id kazdego herosa i rysowac jego avatar
             createImage(i, herosInfo[ownedHeros[i]].avatar, herosInfo[ownedHeros[i]].name, herosInfo[ownedHeros[i]].id);
-        }        
-        
+        }               
     }
-    cappa();
+    collectionReload();
 
-    function createImage(i, src, name, id){   // load an image function 
-                           // creates a new i each time it is called
-        var image = new Image();  // create a new image variable 
+    function createImage(i, src, name, id){  
+                          
+        var image = new Image();  
         image.src = src;
-        image.onload = function(){  // now the onload will have the correct variables 
+        image.onload = function(){ 
             ctx.drawImage(image, 128*(i+1), 128, 128, 128); 
             ctx.fillText(name, 128*(i+1), 280);
             myHeros.push({
@@ -56,17 +60,22 @@
 
     function closeWindow() {
         document.getElementById('heroCard').style.visibility = "hidden";
+        currentHeroCardOpen = -1;
     };
 
-    function openHeroCard(id){
-            document.getElementById('heroCard').style.visibility = "visible";
-            document.getElementById('xButton').addEventListener('click', closeWindow);
-            document.getElementById('windowText').innerText = "tutaj beda staty bohatera o id: " + id;
-            //heroCard.innerHTML = '';
-           // heroCard.innerHTML += windows.poppingHeroCard;
-            console.log('okienko pojawia sie');
+    async function openHeroCard(id){
+        var heroInfo = await gameApp.getOwnedHero(id);
+
+        //tutaj rzeczy ktore podmieniamy otwierajac okienko dla kazdego bohatera
+        document.getElementById('heroCard').style.visibility = "visible";
+        document.getElementById('xButton').addEventListener('click', closeWindow);
+        document.getElementById('windowText').innerText = "tutaj beda staty bohatera o id: " + heroInfo.name;
+        document.getElementById('skillText').innerText = "tyle powera ma ta postac: " + heroInfo.power;
+
+        currentHeroCardOpen = id;
     }
 
+    //tutaj jest taka kox rzecz ktora pozwala w canvasie powiedziec cordy gdzie kliknelismy
     var canvasPosition = canvas.getBoundingClientRect();
     console.log(canvasPosition);
 
@@ -83,6 +92,7 @@
         checkClick(mouse.x, mouse.y);
     });
 
+    //tutaj funkcja co sie odpala na klikniecie mysza na canvasie
     function checkClick(x, y){
         var imgSize = 128;
         selectedHero = "nikt";
@@ -99,12 +109,15 @@
     }
 
     document.getElementById("randomHero").addEventListener("click", function() {
-        wylosujBohateraKtoregoNieMa();     
+        randomHero();     
     },);
 
+    document.getElementById("boostHero").addEventListener("click", function() {
+        gameApp.boostHero(currentHeroCardOpen);    
+        openHeroCard(currentHeroCardOpen); 
+    },);
 
-
-    async function wylosujBohateraKtoregoNieMa(){
+    async function randomHero(){
         var notOwnedHeros = [];
         notOwnedHeros = allHeros.filter(n => !ownedHeros.includes(n));
 
@@ -118,12 +131,16 @@
             alert("Juz masz wszystkich heros!");
         }
 
-        cappa();
+        collectionReload();
     }
 </script>
 
 <style>
-    #canvas-wrap { position:relative } /* Make this a positioned parent */
+    /*to pozawala ze div sie spawni na canvasie tak jakby*/
+    #canvas-wrap { 
+        position:relative 
+    }
+
     #heroCard { 
         position:absolute; 
         top:150px;  
@@ -144,22 +161,19 @@
         height: 650px;
     }
 
-    /* #heroCard {
-        width: 1400px;
-        height: 500px;
-        display:flex;
-        align-items: center;
-        justify-content: center;
-        position:relative;
-        background-color: aqua;
-    } */
-
-    #windowText {
+    .windowText {
         color: #fff;
         width: 840px;
-        margin-top: 3%;
         font-size: 26px;
         position: absolute;
+    }
+
+    .windowText.desc {
+        margin-top: 3%;
+    }
+
+    .windowText.power {
+        margin-top: 10%;
     }
 
     #confirmButton {
@@ -168,7 +182,6 @@
         height: 65px;
         margin-top: 50%;
         background: url(images/cofirmButton.png) no-repeat;
-
         color: #fff;
 
     }
@@ -182,5 +195,13 @@
 
     #xButton:hover {
         opacity: 0.7;
+    }
+
+    #heroImg {
+        position: absolute;
+        width: 128;
+        height: 128px;
+        margin-left: 20%;
+        margin-top: 10%;
     }
 </style>

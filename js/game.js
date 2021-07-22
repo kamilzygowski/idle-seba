@@ -34,6 +34,12 @@ var gameApp = {};
       });
     }
 
+    function boostHero(heroId){
+      firebase.database().ref(uid + "/ownedHeros/" + heroId).update({
+        power: firebase.database.ServerValue.increment(1)
+      })
+    }
+
     function updateMoney(value){
       firebase.database().ref(uid).update({
         gold: value
@@ -84,10 +90,26 @@ var gameApp = {};
           ownedHerosId.push(ownedHeros[i].id);
         }
       }
-         
+  
       console.log(ownedHerosId);
       return ownedHerosId;
     }
+
+    async function getOwnedHero(heroId){
+      var heroInfo = 0;
+      await firebase.database().ref(uid + "/ownedHeros/" + heroId).get().then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          heroInfo = snapshot.val();
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+      
+    return heroInfo;
+  }
 
     async function getInventory(){
       var inventory = [];
@@ -144,7 +166,9 @@ var gameApp = {};
     gameApp.getInventory = getInventory;
     gameApp.unlockHero = unlockHero;
     gameApp.getOwnedHeros = getOwnedHeros;
+    gameApp.getOwnedHero = getOwnedHero;
     gameApp.updateInventory = updateInventory;
     gameApp.removeFromInventory = removeFromInventory;
+    gameApp.boostHero = boostHero;
 })()
 
