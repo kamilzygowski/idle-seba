@@ -71,6 +71,7 @@
         document.getElementById('xButton').addEventListener('click', closeWindow);
         document.getElementById('windowText').innerText = "tutaj beda staty bohatera o id: " + heroInfo.name;
         document.getElementById('skillText').innerText = "tyle powera ma ta postac: " + heroInfo.power;
+        document.getElementById('heroImg').src = heroInfo.avatar;
 
         currentHeroCardOpen = id;
     }
