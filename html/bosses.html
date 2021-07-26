@@ -1,0 +1,149 @@
+<div id='bossesView' style="position:absolute; width:1400px; height:720px; ">
+    <h1 class="bossesHeader">Choose what you want to hunt!</h1>
+    <p class="msg">Tylko ten działa</p>
+    <button class="btn soloBossBtn">Solo Bosses</button>
+    <button class="btn teamBossBtn">Team Bosses</button>
+    <button class="btn heraldBossBtn">Herald Raid</button>
+</div>
+<canvas id='bosses' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+
+<script>
+    var buttons = {
+        soloBoss: document.querySelector('.soloBossBtn'),
+        teamBoss: document.querySelector('.teamBossBtn'),
+        heraldRaid: document.querySelector('heraldBossBtn')
+    };
+    var bossesDiv = document.querySelector('#bossesView');
+    paperSheet = new Image;
+    paperSheet.src = "images/paper_sheet.png";
+    var player = new Image;
+    player.src = "images/Skull avatar.png";
+    var hpBar = new Image;
+    hpBar.src = "images/hpBar.png";
+
+    var boss = {
+        redEye: { id: 0, lvl: 6, name: "The Red Eye", note: "One of a smaller bosses, strong strikes in pair with lack of intelligence." },
+    };
+
+
+    var canvas = document.getElementById("bosses");
+    var ctx = canvas.getContext('2d');
+
+
+    /* ENTERS TO SOLO BOSS SECTION */
+
+    buttons.soloBoss.addEventListener('click', function () {
+        console.log('cfff');
+        var boss1 = '<li class="liElement"><a id="0">' + boss.redEye.name + ', level: ' + boss.redEye.lvl + ', ' + boss.redEye.note + '</a></li>';
+        var boss2 = '<li class="liElement"><a id="1"> aaa bossik se taki od hoooja </a></li>', boss3 = '<li class="liElement"><a id="2"> aaa bossik se taki od hoooja </a></li>',
+            boss4 = '<li class="liElement"><a id="3"> locked </a></li>', boss5 = '<li class="liElement"><a id="4"> locked </a></li>';
+        bossesDiv.innerHTML = '';
+        bossesDiv.innerHTML += '<ul class="bossList"></ul>';
+        var bossList = document.querySelector('.bossList');
+        bossList.innerHTML += boss1;
+        bossList.innerHTML += boss2 + boss3 + boss4 + boss5;
+
+        var liElements = document.querySelectorAll('liElement');
+        bossList.addEventListener('click', function (e) {
+            console.log(e.target.id);
+            bossId = e.target.id;
+            bossesDiv.innerHTML = '';
+
+            ctx.drawImage(player, 222, 512, 128, 128);
+            ctx.drawImage(hpBar,222,75,950, 62);
+            ctx.fillStyle = '#d63031';
+            ctx.fillRect(227, 79, 942,54);
+
+            bossesDiv.innerHTML += '<div class="skills"><div class="skill1">skill 1</div><div class="skill2">skill 2</div><div class="skill3">skill 3</div></div>';
+
+            
+        });
+
+    });
+
+
+
+</script>
+
+<style>
+    #bossesView {
+        /*background-color: blueviolet;*/
+        z-index: 0;
+    }
+
+    .skills {
+        /*background-color: darkviolet;*/
+        width:440px;
+        display: flex;
+        flex-direction: column;
+        margin-top:32%;
+        margin-left: 29%;
+        font-size: 35px;
+        text-align: center;
+    }
+
+    .skill1 {
+        width: 400px;
+        height: 52px;
+        margin-top:12px;
+        margin-bottom: 12px;
+        background-color: deepskyblue;
+    }
+
+    .skill2 {
+        width: 400px;
+        height: 52px;
+        background-color: deepskyblue;
+        margin-top:12px;
+        margin-bottom: 12px;
+    }
+
+    .skill3 {
+        width: 400px;
+        height: 52px;
+        background-color: deepskyblue;
+        margin-top:12px;
+        margin-bottom: 12px;
+    }
+
+    .btn {
+        margin-top: 19%;
+        margin-left: 14%;
+        height: 84px;
+        width: 196px;
+    }
+
+    .bossesHeader {
+        text-align: center;
+        color: #fff;
+    }
+
+    .msg {
+        margin-left: 18%;
+        position: absolute;
+        margin-top: 16%;
+        font-size: 16px;
+        color:#fff;
+    }
+
+    .bossList {
+        list-style-type: none;
+        margin-top: 25%;
+        margin-left: 22%;
+        font-size: 20px;
+    }
+
+    .liElement {
+        text-decoration: none;
+        cursor: pointer;
+        background-color: darkviolet;
+        width: 86%;
+        text-align: center;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+
+    .liElement:hover {
+        color: burlywood;
+    }
+</style>
