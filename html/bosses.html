@@ -13,6 +13,7 @@
         teamBoss: document.querySelector('.teamBossBtn'),
         heraldRaid: document.querySelector('heraldBossBtn')
     };
+    var leftPanel = document.querySelectorAll(".left_panel_button");
     var bossesDiv = document.querySelector('#bossesView');
     paperSheet = new Image;
     paperSheet.src = "images/paper_sheet.png";
@@ -20,15 +21,26 @@
     player.src = "images/Skull avatar.png";
     var hpBar = new Image;
     hpBar.src = "images/hpBar.png";
+    var redEyeImg = new Image;
+    redEyeImg.src = "images/redEye.png";
 
     var boss = {
         redEye: { id: 0, lvl: 6, name: "The Red Eye", note: "One of a smaller bosses, strong strikes in pair with lack of intelligence." },
     };
-
+    var numColumns = 3;
+    var numRows = 1;
+    var frameWidth = redEyeImg.width / numColumns;
+    var frameHeight = redEyeImg.height / numRows;
+    var currentFrame = 0;
 
     var canvas = document.getElementById("bosses");
     var ctx = canvas.getContext('2d');
 
+    /* Clear Canvas Func */
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     /* ENTERS TO SOLO BOSS SECTION */
 
@@ -49,18 +61,42 @@
             bossId = e.target.id;
             bossesDiv.innerHTML = '';
 
+            //ctx.drawImage(redEyeImg, 100, 100, 185, 225,)
+            var frameLooping = setInterval(function () {
+                currentFrame++;
+
+                var maxFrame = numColumns * numRows - 1;
+                if (currentFrame > maxFrame) {
+                    currentFrame = 0;
+                }
+
+                var column = currentFrame % numColumns;
+                var row = Math.floor(currentFrame / numColumns);
+
+                ctx.clearRect(570, 200, frameWidth, frameHeight);
+                ctx.drawImage(redEyeImg, column * frameWidth, row * frameHeight, frameWidth, frameHeight, 570, 200, frameWidth, frameHeight);
+                for (var i = 0; i < 8; i++) {
+                    if (leftPanel[i] != undefined) {
+                        leftPanel[i].addEventListener('click', function () {
+                            clearCanvas();
+                            clearInterval(frameLooping);
+
+                        });
+                    }
+                };
+            }, 400);
             ctx.drawImage(player, 222, 512, 128, 128);
-            ctx.drawImage(hpBar,222,75,950, 62);
+            ctx.drawImage(hpBar, 222, 75, 950, 62);
             ctx.fillStyle = '#d63031';
-            ctx.fillRect(227, 79, 942,54);
+            ctx.fillRect(227, 79, 942, 54);
 
             bossesDiv.innerHTML += '<div class="skills"><div class="skill1">skill 1</div><div class="skill2">skill 2</div><div class="skill3">skill 3</div></div>';
 
-            
+
+
         });
 
     });
-
 
 
 </script>
@@ -73,10 +109,10 @@
 
     .skills {
         /*background-color: darkviolet;*/
-        width:440px;
+        width: 440px;
         display: flex;
         flex-direction: column;
-        margin-top:32%;
+        margin-top: 32%;
         margin-left: 29%;
         font-size: 35px;
         text-align: center;
@@ -85,7 +121,7 @@
     .skill1 {
         width: 400px;
         height: 52px;
-        margin-top:12px;
+        margin-top: 12px;
         margin-bottom: 12px;
         background-color: deepskyblue;
     }
@@ -94,7 +130,7 @@
         width: 400px;
         height: 52px;
         background-color: deepskyblue;
-        margin-top:12px;
+        margin-top: 12px;
         margin-bottom: 12px;
     }
 
@@ -102,7 +138,7 @@
         width: 400px;
         height: 52px;
         background-color: deepskyblue;
-        margin-top:12px;
+        margin-top: 12px;
         margin-bottom: 12px;
     }
 
@@ -123,7 +159,7 @@
         position: absolute;
         margin-top: 16%;
         font-size: 16px;
-        color:#fff;
+        color: #fff;
     }
 
     .bossList {
