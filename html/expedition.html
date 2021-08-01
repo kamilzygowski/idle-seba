@@ -1,0 +1,114 @@
+<div id='expeditionView'>
+    <canvas id='expedition' width='1400px' height='720px' style='border:1px solid grey'></canvas>
+    <img src="images/cofirmButton.png" class="getRewardsButton">
+   
+    <div class="log">
+    </div>
+</div>
+
+<script>
+
+    var exp = 0;
+    var expCap = 600;
+    var frameCount = 0;
+    var ctx = expedition.getContext('2d');
+    ctx.font = '24px Tahoma';
+    var getRewards = new Image;
+    getRewards.src = "images/cofirmButton.png";
+    var animFrame;
+    var leftPanel = document.querySelectorAll('.left_panel_button');
+
+
+    function expeditionLoop() {
+        frameCount++;
+        exp = exp + 1;
+        ctx.clearRect(259, 50, 400, 500);
+        //ctx.drawImage(getRewards, 400, 55, 300, 100);
+        ctx.fillText("Exp: " + exp + '/ ' + expCap, 450, 100)
+        animFrame = requestAnimationFrame(expeditionLoop);
+
+        if (frameCount == 200) {
+            logDiv.innerHTML += '<p id="logsText" class="commonItem"> Congrats, there is a Panda Spear! </p>';
+            frameCount = 0;
+        }
+
+
+        if (exp >= expCap) {
+            cancelAnimationFrame(animFrame);
+        }
+    }
+
+        /* Exit loop on menu buttons */
+
+    function exitLoop(){
+        console.log('blokendo na otsie');
+        for (var i = 0; i<8;i++) {
+            console.log('for');
+            if (leftPanel[i] != undefined) {
+                leftPanel[i].addEventListener('click', function () {
+                    console.log('noklikam');
+                    ctx.clearRect(0, 0,1400, 720);
+                    cancelAnimationFrame(animFrame);
+
+                });
+            }
+    }
+}
+    exitLoop();
+    expeditionLoop();
+
+    /* expedition Logs */
+
+    var logDiv = document.querySelector(".log");
+    logDiv.innerHTML = '<p id="logsText"> Welcome to the expedition logs! </p>';
+
+
+
+</script>
+
+<style>
+    .log {
+        width: 880px;
+        height: 400px;
+        background-color: grey;
+        margin-top: 14.5%;
+        margin-left: 11.6%;
+        border: 4px solid #111;
+        display: flex;
+        flex-direction: column;
+        position:absolute;
+    }
+
+    #logsText {
+        width: 100%;
+        height: 2px;
+        font-size: 24px;
+        margin-left: 2%;
+
+    }
+
+    .commonItem {
+        color: blue;
+    }
+
+    .getRewardsButton {
+        margin-left: 21%;
+        margin-top:3%;
+        width: 300px;
+        height: 100px;
+        position:absolute;
+    }
+
+    #expeditiomView {
+        position: relative;
+    }
+
+    #expedition {
+        position: absolute;
+        z-index: 1;
+    }
+
+    .getRewardsButton:hover {
+        opacity: 0.3;
+    }
+</style>
