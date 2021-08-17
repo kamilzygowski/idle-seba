@@ -21,13 +21,15 @@
 
     function expeditionLoop() {
         frameCount++;
-        exp = exp + 1;
+        exp = exp + 0.05;
+        
+        
         ctx.clearRect(259, 50, 400, 500);
         //ctx.drawImage(getRewards, 400, 55, 300, 100);
-        ctx.fillText("Exp: " + exp + '/ ' + expCap, 450, 100)
+        ctx.fillText("Exp: " + Math.floor(exp) + '/ ' + expCap, 450, 100)
         animFrame = requestAnimationFrame(expeditionLoop);
 
-        if (frameCount == 200) {
+        if (frameCount == 20 * 20) {
             logDiv.innerHTML += '<p id="logsText" class="commonItem"> Congrats, there is a Panda Spear! </p>';
             frameCount = 0;
         }
