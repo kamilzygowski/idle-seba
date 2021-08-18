@@ -46,6 +46,24 @@ var gameApp = {};
       });
     }
 
+    async function updateTactics(used, slotId, heroId, avatar){
+      if(!used){
+        //DEFAULT
+        firebase.database().ref(uid + "/tactics/" + slotId).update({
+          avatar: "images/slotWindow.png",
+          heroId: 0,
+          used: used
+        })
+      }
+      else {
+        firebase.database().ref(uid + "/tactics/" + slotId).update({
+          avatar: avatar,
+          heroId: heroId,
+          used: used
+        })
+      }
+    }
+
    async function updateInventory(value){
       inventory = await getInventory();
       inventory.push(value);
@@ -58,6 +76,13 @@ var gameApp = {};
       inventory.splice(pos,1);
       firebase.database().ref(uid + "/inventory").set(inventory);
     }
+
+    async function heroTactics(heroId, slot, usedd){
+      await firebase.database().ref(uid + "/ownedHeros/" + heroId).update({
+        used: true
+      })
+      console.log("UZYWANY W TEAMIE");
+    }
     
     async function unlockHero(id){
       var request = new XMLHttpRequest();
@@ -68,6 +93,22 @@ var gameApp = {};
       console.log(herosInfo[id]);
       //zapisanie w firebasie
       firebase.database().ref(uid + "/ownedHeros/" + id ).update(herosInfo[id]);
+    }
+
+    async function getTactics(){
+      var tactics = [];
+      await firebase.database().ref(uid + "/tactics").get().then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          tactics = snapshot.val();
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      return tactics;
     }
 
     async function getOwnedHeros(){
@@ -151,7 +192,12 @@ var gameApp = {};
         gold: 50,
         hp: 800,
         inventory: [],
-        ownedHeros: {}
+        ownedHeros: {},
+        tactics: [  {"slotId": 0, "x": 100, "y": 100, "avatar": "images/slotWindow.png", "used": false, "heroId": 0},
+        {"slotId": 1, "x": 100, "y": 300, "avatar": "images/slotWindow.png", "used": false, "heroId": 0},
+        {"slotId": 2, "x": 100, "y": 500, "avatar": "images/slotWindow.png", "used": false, "heroId": 0},
+        {"slotId": 3, "x": 300, "y": 200, "avatar": "images/slotWindow.png", "used": false, "heroId": 0},
+        {"slotId": 4, "x": 300, "y": 400, "avatar": "images/slotWindow.png", "used": false, "heroId": 0}]
       });
       //TO TRZEBA ZROBIC TAK ZE JAK SIE WYSLE SUCCESFUL TO DOPIERO MA ZALADOWAC GAME.HTML
       window.location.replace("game.html");
@@ -170,5 +216,8 @@ var gameApp = {};
     gameApp.updateInventory = updateInventory;
     gameApp.removeFromInventory = removeFromInventory;
     gameApp.boostHero = boostHero;
+    gameApp.heroTactics = heroTactics;
+    gameApp.getTactics = getTactics;
+    gameApp.updateTactics = updateTactics;
 })()
 

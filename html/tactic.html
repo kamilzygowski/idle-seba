@@ -1,50 +1,145 @@
-<canvas id='profile' width='1400px' height='720px' style='border:1px solid grey'></canvas>
-<button id = 'adventure' style="position: absolute; top:300px; left:500px;">PRZYGODA</button>
-<button id = 'training' style="position: absolute; top:350px; left:500px;">TRENING</button>
+<canvas id='tactic' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 
 <script>
-    var character_info = '';
-    var ctx = profile.getContext('2d');
+   
+    var canvas = document.getElementById('tactic');
+    var ctx = tactic.getContext('2d');
+    var selectedSlot = "nic";
+    var ownedHeros = [];
+    var myHeros = [];
+    var tacticSlots = [];
+    var myHeros = [];
 
-    my_profile();
-
-    async function get_my_profile_info(){
-        character_info = await gameApp.getCharacterInfo();
-        console.log(character_info);   
-        console.log(character_info);
-    }
-
-    async function set_my_profile_info(){
-        await get_my_profile_info();
-        console.log("siemka");
-        var name = "Twoja nazwa: " + character_info.name;
-        var level = "Twój poziom: " + character_info.level;
-        var skill = "Twój skill: " + character_info.skill;
-        console.log("3");
-        ctx.fillStyle = "indigo";
-        console.log("4");
-        ctx.fillText(name, profile.width/2 - 150, profile.height/2);
-        ctx.fillText(level, profile.width/2 - 150, profile.height/2 + 50);
-        ctx.fillText(skill, profile.width/2 - 150, profile.height/2 + 100);
-    }
-
-    function my_profile(){
+    async function reloadTactic(){
+        ctx.clearRect(0,0,tactic.width, tactic.height);
+        ctx.fillStyle = 'lightblue';   //marchewkowe tlo
+        ctx.fillRect(0, 0, tactic.width, tactic.height);
+        ctx.fillStyle = "yellow";
         
-        ctx.font = '24px Tahoma';
-        ctx.fillStyle = 'violet'; 
-        ctx.fillRect(0, 0, profile.width,profile.height);
-        set_my_profile_info();
+        await collectionTacticReload();
+        await slotsTacticReload();
+        drawSlots();
+        //requestAnimationFrame(reloadTactic);
+    }
+    reloadTactic();
+
+    async function slotsTacticReload(){
+        tacticSlots = await gameApp.getTactics();
+        console.log(tacticSlots[0].x);
     }
 
-    document.getElementById("adventure").addEventListener("click", function() {
-        gameApp.gainLevel(character_info.level + 1);
-        my_profile();
-    },);
-
-    document.getElementById("training").addEventListener("click", function() {
-        gameApp.gainSkill(character_info.skill + 1);
-        my_profile();
-    },);
+    async function collectionTacticReload(){
+       
+        ownedHeros = await gameApp.getOwnedHeros();
     
+        var bias = 0;
+        for(var i = 0; i < ownedHeros.length; i++){
+          //TUTAJ TROCHE ZJEBANIE BO NAJPIERW SCIAGAM WSZYSTKIE ID A POTEM W PETLI TUTAJ PO KOLEI KOLEJNE INFO 
+          //ALE NAWET FAJNIE KLIMATYCZNIE SIE POJAWIAJA PO KOLEI
+            var heroInfo = await gameApp.getOwnedHero(ownedHeros[i]);
+            if(!heroInfo.used){
+                createImage(bias, heroInfo.avatar, heroInfo.name, heroInfo.id);
+                bias++
+            }
+        }               
+    }
+
+    function createImage(i, src, name, id){  
+                          
+        var image = new Image();  
+        image.src = src;
+        image.onload = function(){ 
+            ctx.drawImage(image, 128*(i+1) + 500, 128, 128, 128); 
+            ctx.fillText(name, 128*(i+1) + 500, 280);
+            myHeros.push({
+                "id": id,
+                "x": 128*(i+1) + 500,
+                "y": 128,
+                "avatar": src
+            })
+        } 
+    }
+
+    function drawSlots(){
+       
+        for (var i = 0; i < 5; i++){
+            console.log("TUTAJ" + tacticSlots[i].x)
+            if( selectedSlot.x == tacticSlots[i].x && selectedSlot.y == tacticSlots[i].y){
+                console.log("siema");
+                drawBorder(tacticSlots[i]);
+                console.log(selectedSlot.avatar);
+                tacticSlots[i].avatar = selectedSlot.avatar;
+            }
+            
+            //ANONIMOWA FUNKCJA POKAZAC KAMILKOWI BO CIEKAWA SPRAWA
+            (function(currentSlot){
+                var image = new Image();  
+                image.src = tacticSlots[i].avatar;
+                image.onload = function(){ 
+                    ctx.drawImage(image, currentSlot.x, currentSlot.y, 128, 128); 
+                };
+            })(tacticSlots[i])
+            
+            console.log(selectedSlot);
+        }
+    }
+
+    function drawBorder(currentSlot){
+        ctx.beginPath();
+        ctx.strokeStyle = '#f00';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(currentSlot.x-5, currentSlot.y-5, 138, 138);
+    }
+
+    //tutaj jest taka kox rzecz ktora pozwala w canvasie powiedziec cordy gdzie kliknelismy
+    var canvasPosition = canvas.getBoundingClientRect();
+    console.log(canvasPosition);
+
+    var mouse = {
+        x: canvas.width/2,
+        y: canvas.width/2,
+        click: false
+    }
+
+    canvas.addEventListener('mousedown', function(event){
+        mouse.x = event.x - canvasPosition.left;
+        mouse.y = event.y - canvasPosition.top;
+        console.log(mouse.x, mouse.y);
+        checkClick(mouse.x, mouse.y);
+    });
+
+    //tutaj funkcja co sie odpala na klikniecie mysza na canvasie
+    function checkClick(x, y){
+        var imgSize = 128;
+        
+        myHeros.forEach(hero => {
+            if (x >= hero.x && x <= hero.x + imgSize && y >= hero.y && y <= hero.y + imgSize){ 
+                console.log(selectedSlot)   
+                if(selectedSlot != "nic"){
+                    console.log("AAASIEMES");
+                    selectedSlot.avatar = hero.avatar;
+                    gameApp.heroTactics(hero.id);
+                    gameApp.updateTactics(true, selectedSlot.slotId, hero.id, hero.avatar);
+                    //i tutaj ogolnie wysylamy info ze w taktyce slota tego zajmuje hero o id tym i dajemy herosowi ze 
+                    //jest used i sie nie wyswietla po prawej
+                    // i jeszcze zrobic mechanike podmianki
+                    //i potem w dungeonie sie wysewietlaja jak tu ustawimy tylko tam juz sa bohaterami do walczeni koxami ez
+                   // reloadTactic();
+                }
+            }
+        })
+
+        for (var i = 0; i < 5; i++){
+            var currentSlot = tacticSlots[i];
+            if (x >= currentSlot.x && x <= currentSlot.x + imgSize && y >= currentSlot.y && y <= currentSlot.y + imgSize){
+                selectedSlot = currentSlot;         
+                break;
+            }
+            else {
+                selectedSlot = "nic";
+            }
+        }
+        reloadTactic();
+    }
 
 </script>

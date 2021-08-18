@@ -3,24 +3,28 @@
         "id": 1,
         "name": "Kamilek",
         "avatar": "images/Skull avatar.png",
-        "power": 1
+        "power": 1,
+        "used": false
     },
     "2": {
         "id": 2,
         "name": "Michalek",
         "avatar": "images/jakis_lucznik.png",
-        "power": 2
+        "power": 2,
+        "used": false
     },
     "3": {
         "id": 3,
         "name": "Sebastianek",
         "avatar": "images/knightAvatar.png",
-        "power": 1
+        "power": 1,
+        "used": false
     },
     "4": {
         "id": 4,
         "name": "Kasia",
         "avatar": "images/Avatar.png",
-        "power": 2
+        "power": 2,
+        "used": false
     }
 }
