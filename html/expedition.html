@@ -1,12 +1,22 @@
+
 <div id='expeditionView'>
-    <canvas id='expedition' width='1400px' height='720px' style='border:1px solid grey'></canvas>
-    <img src="images/cofirmButton.png" class="getRewardsButton">
+    <button class="getRewardsButton" > Get Rewards</button>
    
     <div class="log">
     </div>
 </div>
+<canvas id='expedition' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 
 <script>
+
+    /* VARIABLES */
+
+    var expeditionDiv = document.querySelector('#expeditionView');
+    var textLogs = ['<p id="logsText" class="commonItem"> Congrats, there is a Bread Sword! </p>', // BREAD SWORD
+    '<p id="logsText" class="rareItem"> Congrats, there is a Novice Shield! </p>', // NOVICE SHIELD
+    '<p id="logsText" class="legendaryItem"> Congrats, there is a Panda Spear! </p>'] // PANDA SPEAR
+
+
 
     var exp = 0;
     var expCap = 600;
@@ -17,21 +27,39 @@
     getRewards.src = "images/cofirmButton.png";
     var animFrame;
     var leftPanel = document.querySelectorAll('.left_panel_button');
-
+    var allLogs;
+    var logsText = document.querySelectorAll('#logsText');
 
     function expeditionLoop() {
         frameCount++;
-        exp = exp + 0.05;
-        
+        exp = exp + 1.05;
+        allLogs = document.querySelectorAll("#logsText");
+        allLogsArray = Array.from(allLogs);
         
         ctx.clearRect(259, 50, 400, 500);
         //ctx.drawImage(getRewards, 400, 55, 300, 100);
         ctx.fillText("Exp: " + Math.floor(exp) + '/ ' + expCap, 450, 100)
         animFrame = requestAnimationFrame(expeditionLoop);
 
-        if (frameCount == 20 * 20) {
-            logDiv.innerHTML += '<p id="logsText" class="commonItem"> Congrats, there is a Panda Spear! </p>';
+        if (frameCount == 20  ) {
+            /* Random number from 1 to 3 */
+            var rng = Math.floor(Math.random() * 3 );
+            logDiv.innerHTML += textLogs[rng];
             frameCount = 0;
+            console.log(document.querySelectorAll("#logsText").length);
+
+            /* if number of logs is higher than 8, remove first log */
+
+            if (allLogs.length >= 7){
+
+        logsTextArray = Array.from(allLogs);
+;
+                console.log(logDiv.querySelector("#" + logsTextArray[0].id + ""));
+                //logDiv.getElementById(logsTextArray[0].id);
+                logDiv.querySelector("#" + logsTextArray[0].id + "").remove();
+
+                //logsText.style.top += 40 + 'px';
+            }
         }
 
 
@@ -43,12 +71,9 @@
         /* Exit loop on menu buttons */
 
     function exitLoop(){
-        console.log('blokendo na otsie');
         for (var i = 0; i<8;i++) {
-            console.log('for');
             if (leftPanel[i] != undefined) {
                 leftPanel[i].addEventListener('click', function () {
-                    console.log('noklikam');
                     ctx.clearRect(0, 0,1400, 720);
                     cancelAnimationFrame(animFrame);
 
@@ -64,11 +89,30 @@
     var logDiv = document.querySelector(".log");
     logDiv.innerHTML = '<p id="logsText"> Welcome to the expedition logs! </p>';
 
+    /* getting exp from clicking button */
+
+    var rewardButton = expeditionDiv.querySelector('.getRewardsButton');
+    rewardButton.addEventListener('click', function(){
+        
+        /* Take the actual exp and give it to player directly on server */
+
+
+        exp = 0;
+        frameCount = 0;
+        expeditionLoop();
+
+    });
+
 
 
 </script>
 
 <style>
+
+    .hidden {
+        display: none;
+    }
+
     .log {
         width: 880px;
         height: 400px;
@@ -90,16 +134,32 @@
     }
 
     .commonItem {
+        color: lightgray;
+    }
+
+    .rareItem {
         color: blue;
     }
 
+    .legendaryItem {
+        color:goldenrod;
+    }
+
     .getRewardsButton {
-        margin-left: 21%;
-        margin-top:3%;
+        margin-left: 33%;
+        margin-top:51px;
         width: 300px;
         height: 100px;
         position:absolute;
+        z-index: 5;
+        opacity: 1;
+        font-size: 34px;
+        background:url("images/cofirmButton.png");
+        background-repeat: no-repeat;
+        background-size: cover;
     }
+
+
 
     #expeditiomView {
         position: relative;
@@ -111,6 +171,6 @@
     }
 
     .getRewardsButton:hover {
-        opacity: 0.3;
+        opacity: 0.6;
     }
 </style>
