@@ -1,7 +1,6 @@
-
 <div id='expeditionView'>
-    <button class="getRewardsButton" > Get Rewards</button>
-   
+    <button class="getRewardsButton"> Get Rewards</button>
+    <div id="wanderingHero"></div>
     <div class="log">
     </div>
 </div>
@@ -13,16 +12,18 @@
 
     var expeditionDiv = document.querySelector('#expeditionView');
     var textLogs = ['<p id="logsText" class="commonItem"> Congrats, there is a Bread Sword! </p>', // BREAD SWORD
-    '<p id="logsText" class="rareItem"> Congrats, there is a Novice Shield! </p>', // NOVICE SHIELD
-    '<p id="logsText" class="legendaryItem"> Congrats, there is a Panda Spear! </p>'] // PANDA SPEAR
+        '<p id="logsText" class="rareItem"> Congrats, there is a Novice Shield! </p>', // NOVICE SHIELD
+        '<p id="logsText" class="legendaryItem"> Congrats, there is a Panda Spear! </p>'] // PANDA SPEAR
 
 
-
+    var gold = 0;
     var exp = 0;
     var expCap = 600;
+    var goldCap = 32;
     var frameCount = 0;
     var ctx = expedition.getContext('2d');
-    ctx.font = '28px Tahoma';
+    ctx.font = '30px Tahoma';
+    ctx.fillStyle = "#fff";
     var getRewards = new Image;
     getRewards.src = "images/cofirmButton.png";
     var animFrame;
@@ -33,27 +34,30 @@
     function expeditionLoop() {
         frameCount++;
         exp = exp + 1.05;
+        gold += 0.08;
         allLogs = document.querySelectorAll("#logsText");
         allLogsArray = Array.from(allLogs);
-        
+
         ctx.clearRect(259, 50, 400, 500);
         //ctx.drawImage(getRewards, 400, 55, 300, 100);
-        ctx.fillText("Exp: " + Math.floor(exp) + '/ ' + expCap, 450, 100)
+        ctx.fillText("Exp: " + Math.floor(exp) + '/ ' + expCap, 450, 100);
+        ctx.fillStyle = "gold";
+        ctx.fillText("Gold: " + Math.floor(gold) + '/ ' + goldCap, 450, 150);
         animFrame = requestAnimationFrame(expeditionLoop);
 
-        if (frameCount == 20  ) {
+        if (frameCount == 20) {
             /* Random number from 1 to 3 */
-            var rng = Math.floor(Math.random() * 3 );
+            var rng = Math.floor(Math.random() * 3);
             logDiv.innerHTML += textLogs[rng];
             frameCount = 0;
             console.log(document.querySelectorAll("#logsText").length);
 
             /* if number of logs is higher than 8, remove first log */
 
-            if (allLogs.length >= 7){
+            if (allLogs.length >= 4) {
 
-        logsTextArray = Array.from(allLogs);
-;
+                logsTextArray = Array.from(allLogs);
+                ;
                 console.log(logDiv.querySelector("#" + logsTextArray[0].id + ""));
                 //logDiv.getElementById(logsTextArray[0].id);
                 logDiv.querySelector("#" + logsTextArray[0].id + "").remove();
@@ -62,25 +66,32 @@
             }
         }
 
+        /* IF gold is full, exp is not, vice versa: wait until both are true and cancel loop */
 
-        if (exp >= expCap) {
+        if (exp >= expCap && gold >= goldCap) {
             cancelAnimationFrame(animFrame);
+        } else if (exp >= expCap) {
+            exp = expCap;
+        } else if (gold >= goldCap) {
+            gold = goldCap;
         }
     }
 
-        /* Exit loop on menu buttons */
+    /* Exit loop on menu buttons */
 
-    function exitLoop(){
-        for (var i = 0; i<8;i++) {
+    function exitLoop() {
+        for (var i = 0; i < 8; i++) {
             if (leftPanel[i] != undefined) {
                 leftPanel[i].addEventListener('click', function () {
-                    ctx.clearRect(0, 0,1400, 720);
+                    ctx.clearRect(0, 0, 1400, 720);
                     cancelAnimationFrame(animFrame);
 
                 });
             }
+        }
+
+        cancelAnimationFrame(animFrame);
     }
-}
     exitLoop();
     expeditionLoop();
 
@@ -92,14 +103,20 @@
     /* getting exp from clicking button */
 
     var rewardButton = expeditionDiv.querySelector('.getRewardsButton');
-    rewardButton.addEventListener('click', function(){
-        
+    rewardButton.addEventListener('click', function () {
+
         /* Take the actual exp and give it to player directly on server */
 
-
+        if (gold >= goldCap && exp >= expCap) {
+            exp = 0;
+            frameCount = 0;
+            gold = 0;
+            expeditionLoop();
+ 
+        }
         exp = 0;
         frameCount = 0;
-        expeditionLoop();
+        gold = 0;
 
     });
 
@@ -108,21 +125,24 @@
 </script>
 
 <style>
-
+    #expedition {
+        background: url("../images/expeditionBackground.png");
+    }
     .hidden {
         display: none;
     }
 
     .log {
         width: 880px;
-        height: 400px;
+        height: 220px;
         background-color: grey;
-        margin-top: 295px;
+        margin-top: 475px;
         margin-left: 222px;
         border: 4px solid #111;
         display: flex;
         flex-direction: column;
-        position:absolute;
+        position: absolute;
+        z-index: 7;
     }
 
     #logsText {
@@ -142,19 +162,19 @@
     }
 
     .legendaryItem {
-        color:goldenrod;
+        color: goldenrod;
     }
 
     .getRewardsButton {
-        margin-left: 635px;
-        margin-top:51px;
+        margin-left: 695px;
+        margin-top: 51px;
         width: 300px;
         height: 100px;
-        position:absolute;
+        position: absolute;
         z-index: 5;
         opacity: 1;
         font-size: 34px;
-        background:url("images/cofirmButton.png");
+        background: url("images/cofirmButton.png");
         background-repeat: no-repeat;
         background-size: cover;
     }
@@ -172,5 +192,30 @@
 
     .getRewardsButton:hover {
         opacity: 0.6;
+    }
+
+    #wanderingHero {
+        offset-path: path('M 0,20 C20,900 400,0 1260,300');
+        animation: move 10000ms infinite alternate ease-in-out;
+        width: 128px;
+        height: 128px;
+        top: 355px;
+        background: url("../images/expeditionAvatar.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        margin-top: -255px;
+        margin-left: 55px;
+        z-index:5;
+    }
+
+    @keyframes move {
+        0% {
+            offset-distance: 0%;
+        }
+
+        100% {
+            offset-distance: 100%;
+        }
     }
 </style>

@@ -50,7 +50,7 @@
     character_info = await gameApp.getCharacterInfo();
     //ctx.clearRect(185, 625, 210, 40);
     ctx.drawImage(slotWindowImg, 175, 625, 220, 40);
-    var playerMoney = 'Money: ' + character_info.gold + ' $';
+    var playerMoney = 'Money: ' + character_info.gold + '';
     ctx.font = '600 30px Arial';
     ctx.fillStyle = "#fbc531";
     ctx.fillText(playerMoney, 185, 655);
@@ -308,7 +308,7 @@
         // console.log(id);
         var itemDescription = 'Item stats = Attack: ' + items[itemId].atk + ' Def: ' + items[itemId].def + ' Price: ' + items[itemId].price + ' Speciality: ' + items[itemId].spec;
         // console.log('Item stats: attack: ' + items[itemId].atk + ' def: ' + items[itemId].def + ' price: ' + items[itemId].price + ' speciality: ' + items[itemId].spec);
-        shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>' + '* ' + items[itemId].name + ' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + '$</p><p> Sell: ' + Math.floor(items[itemId].price * 0.6) + '$</p><p> speciality: ' + items[itemId].spec + '</p></div>';
+        shopDiv.querySelector('.itemDescription').innerHTML = '<div><p>' + '* ' + items[itemId].name + ' *' + '</p><p> Attack: ' + items[itemId].atk + '</p> <p>  Defense: ' + items[itemId].def + '</p><p> Price: ' + items[itemId].price + ' gold</p><p> Sell: ' + Math.floor(items[itemId].price * 0.6) + ' gold</p><p> speciality: ' + items[itemId].spec + '</p></div>';
         this.addEventListener('mouseleave', function () {
           shopDiv.querySelector('.itemDescription').innerHTML = '<p>Hover items to see stats here!</p>';
         })

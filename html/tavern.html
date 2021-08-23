@@ -27,9 +27,14 @@
     var windows = {
         poppingWindowGambler: '<div id="poppingWindow"><p id="windowText"> ' + gamblerText[0] + '</p><button id="confirmButton"> confirm bet </button><img id="xButton' +
             '" src="images/closeButton.png"><img src=' + '"images/window.png"><p id="windowText2"> How much you want to bet: </p><p class="bet">' + setBet() +
-            ' $</p><input type="range" min="1" max="100" value="0" class="slider" id="myRange"><img src="images/cube.png" id="cube"><div id="chooseNr"><div id="nr1" class="1">1</div><div id="nr2" class="2">2</div><div class="3" id="nr3">3</div><div id="nr4" class="4">4</div><div id="nr5" class="5">5</div><div id="nr6" class="6">6</div></div><p id="pickNrText">Choose your number: </p><p id="playerMoney">Money: ' + playerMoney + ' $</p><div id="gambleResult"></div></div>',
-        poppingWindowBlackMarket: '<div id="poppingWindow"><p id="windowText"> ' + blackMarketText[0] + '</p><p id="windowText3"> Just pay me: 10$ and you got it</p><p id="windowText4">Remember, no refunds HUAHUAHUA</p><img id="bmSlot" src="images/slotWindow.png"><img id="bmSlot" src="images/spear.png"><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src=' + '"images/window.png"></div>'
+            ' gold</p><input type="range" min="1" max="100" value="0" class="slider" id="myRange"><img src="images/cube.png" id="cube"><div id="chooseNr"><div id="nr1" class="1">1</div><div id="nr2" class="2">2</div><div class="3" id="nr3">3</div>' + 
+            '<div id="nr4" class="4">4</div><div id="nr5" class="5">5</div><div id="nr6" class="6">6</div></div><p id="pickNrText">Choose your number: </p><p id="playerMoney">Money: ' + playerMoney + 
+                ' gold</p><div id="gambleResult"></div></div>',
+        poppingWindowBlackMarket: '<div id="poppingWindow"><p id="windowText"> ' + blackMarketText[0] + 
+            '</p><p id="windowText3"> Just pay me: 10 gold and you got it</p><p id="windowText4">Remember, no refunds HUAHUAHUA</p><img id="bmSlot" src="images/slotWindow.png">' + 
+            '<img id="bmSlot" src="images/spear.png"><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src="images/window.png"><p id="playerMoney">Money: ' + playerMoney + ' gold</p></div>'
     };
+
 
     var characters = {
         gamblerHTML: '<img id="' + 'gambler" ' + 'src="images/Gambler1.png"' + 'style="position:absolute">',
@@ -189,8 +194,9 @@
             console.log('okienko pojawia sie');
 
             document.getElementById('xButton').addEventListener('click', closeWindow);
+            document.querySelector('#confirmButton').addEventListener('click', confirmButtonClick);
         });
-    }
+}
 
     function init() {
         get_my_profile_info();
@@ -231,16 +237,18 @@
 
                 //choosingGreenNumber();
                 document.getElementById('xButton').addEventListener('click', closeWindow);
-
-
             });
         }
 
+    }, 1/30);
 
-    }, 1 / 60000000);
+    /* Black Market confirm trade */
 
-
-
+function confirmButtonClick() {
+    document.getElementById('poppingWindow').innerHTML = '<p id="bmThanks"> Thanks, thanks, take to the hands</p><p id="windowText4">GOOD bye, hi-hy-hy</p><img src="images/window.png"><img id="xButton' + 
+    '" src="images/closeButton.png"></div>';
+    document.getElementById('xButton').addEventListener('click', closeWindow);
+}
 
 </script>
 
@@ -273,6 +281,15 @@
     #bmSlot {
         position: absolute;
         margin-top:15%;
+    }
+
+    #bmThanks {
+        color: #fff;
+        width: 840px;
+        margin-top: 15%;
+        font-size: 56px;
+        position: absolute;
+        text-align: center;
     }
 
     #tavernView {
