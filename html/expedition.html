@@ -14,8 +14,7 @@
     var textLogs = ['<p id="logsText" class="commonItem"> Congrats, there is a Bread Sword! </p>', // BREAD SWORD
         '<p id="logsText" class="rareItem"> Congrats, there is a Novice Shield! </p>', // NOVICE SHIELD
         '<p id="logsText" class="legendaryItem"> Congrats, there is a Panda Spear! </p>'] // PANDA SPEAR
-
-
+        
     var gold = 0;
     var exp = 0;
     var expCap = 600;
@@ -52,17 +51,13 @@
             frameCount = 0;
             console.log(document.querySelectorAll("#logsText").length);
 
-            /* if number of logs is higher than 8, remove first log */
+            /* if number of logs is higher than 4, remove first log */
 
             if (allLogs.length >= 4) {
 
                 logsTextArray = Array.from(allLogs);
-                ;
                 console.log(logDiv.querySelector("#" + logsTextArray[0].id + ""));
-                //logDiv.getElementById(logsTextArray[0].id);
                 logDiv.querySelector("#" + logsTextArray[0].id + "").remove();
-
-                //logsText.style.top += 40 + 'px';
             }
         }
 
@@ -92,8 +87,6 @@
 
         cancelAnimationFrame(animFrame);
     }
-    exitLoop();
-    expeditionLoop();
 
     /* expedition Logs */
 
@@ -107,18 +100,23 @@
 
         /* Take the actual exp and give it to player directly on server */
 
+        /* When both gold and exp are full restart the loop, else just restart vars */
+
         if (gold >= goldCap && exp >= expCap) {
             exp = 0;
             frameCount = 0;
             gold = 0;
             expeditionLoop();
- 
         }
         exp = 0;
         frameCount = 0;
         gold = 0;
-
     });
+
+    /* Starting functions when component renders */
+
+    exitLoop();
+    expeditionLoop();
 
 
 

@@ -67,21 +67,14 @@
 
 
   /* INITIALIZING PASSIVE FUNCTIONS */
-  
+
   init();
-
-
   ctx.fillStyle = '#ff9ff3';
   ctx.fillText('Marshall, the shopkeeper', 115, 266);
-
   testImg = new Image;
   testImg.src = 'images/Avatar.png';
   ctx.drawImage(testImg, 200, 100, 128, 128);
-
   ctx.drawImage(heroAvatar, 200, 485, 128, 128);
-
-
-
 
 
   /* Randomize items from 0 to 2 */
@@ -90,6 +83,8 @@
     rng = Math.floor(Math.random() * 3);
     return rng;
   }
+
+  /* Set Inventory Function */
 
   async function setInventory() {
     //console.log("PRZED ZEBRANIEM DANYCH");
@@ -108,6 +103,8 @@
       }
     }
   }
+
+  /* Search in item src to get its id and display correct item image */
 
 
   function getItemId() {
@@ -160,10 +157,6 @@
       }
     }
   }
-
-  /*dragElement(document.getElementById("shopItem1"));
-  dragElement(document.getElementById("shopItem2"));
-  dragElement(document.getElementById("shopItem3"));*/
 
   var shopItems = document.querySelectorAll('.shopItem');
 
@@ -228,6 +221,8 @@
 
     }, false);
 
+    /* Drop items on inventory to buy them and update db */
+
     playerInventoryDOM[id].addEventListener('drop', function (event) {
       event.preventDefault();
       if (items[dragged.classList.value].price <= character_info.gold) {
@@ -275,15 +270,15 @@
       if (event.target.className == "playerInventory playerItem7" || event.target.className == "playerInventory playerItem6" || event.target.className == "playerInventory playerItem5" || event.target.className == "playerInventory playerItem4"
         || event.target.className == "playerInventory playerItem3" || event.target.className == "playerInventory playerItem2" || event.target.className == "playerInventory playerItem1" || event.target.className == "playerInventory playerItem0") {
 
-        //event.target.style.background = "purple";
       }
 
     }, false);
 
+    /* On drop functions while moving items */
+
     shopItems[id].addEventListener('drop', function (event) {
       event.preventDefault();
       var z = event.target.parentElement;
-      //if (items[dragged2.classList.value].price <= character_info.gold){
       if (z.className == "shopItem shopItem7" || z.className == "shopItem shopItem6" || z.className == "shopItem shopItem5" || z.className == "shopItem shopItem4"
         || z.className == "shopItem shopItem3" || z.className == "shopItem shopItem2" || z.className == "shopItem shopItem1" || z.className == "shopItem shopItem0") {
 
@@ -314,6 +309,8 @@
         })
       }
     });
+
+    /* Hover action on item to render their stats on the right */
 
     playerInventoryDOM[id].addEventListener('mouseover', function (event) {
       if (this.children.shopImg == undefined) {
