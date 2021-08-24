@@ -1,5 +1,5 @@
 class Hero {
-    constructor(id, name, avatar, x, y, dmg, health) {
+    constructor(id, name, avatar, x, y, dmg, health, exp) {
         this.id = id;
         this.name = name;
         this.health = health;
@@ -12,6 +12,7 @@ class Hero {
         this.selected = false;
         this.spellX = x;
         this.spellY = y;
+        this.exp = exp;
         this.spellSpeed = 8;
         this.spellDamage = 15;
     }
@@ -100,7 +101,7 @@ class Hero {
         ctx.drawImage(spellImage, this.spellX, this.spellY, 100, 100);
 
         if ((this.spellX > x + this.spellSpeed || this.spellX < x - this.spellSpeed) || (this.spellY > y + this.spellSpeed || this.spellY < y - this.spellSpeed)) {
-            requestAnimationFrame(() => this.castSpell2(a, b, x, y));
-        }
+        requestAnimationFrame(() => this.castSpell2(a, b, x, y));
     }
+  }
 }

@@ -52,6 +52,17 @@ var utils = {};
     }
   }
 
+  function createImage(x, y, width, height, src) {
+
+
+    var image = new Image();
+    image.src = src;
+    image.onload = function () {
+      this.ctx.drawImage(image, x,y, width, height);
+    };
+  }
+
   utils.walka = walka;
   utils.dragElement = dragElement;
+  utils.createImage = createImage;
 }

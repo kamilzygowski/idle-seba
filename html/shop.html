@@ -33,32 +33,30 @@
   { x: 910, y: 210, height: 96, width: 96 }
   ];
 
-
-  slotWindowImg = new Image;
-  slotWindowImg.src = slotWindow[0].img;
-  heroAvatar = new Image;
-  heroAvatar.src = 'images/knightAvatar.png';
-  swordImg = new Image;
-  swordImg.src = 'images/sword.png';
-
   ctx.font = '32px Tahoma';
   ctx.fillStyle = '#e67e22';   //marchewkowy 
   ctx.fillRect(0, 0, shop.width, shop.height);
+
+  /* Slot window made especially for CTX.DRAWIMAGE below */
+
+  var slotWindowImg = new Image;
+  slotWindowImg.src = slotWindow[0].img;
 
   //character_info = gameApp.getCharacterInfo();
   async function get_my_profile_info() {
     character_info = await gameApp.getCharacterInfo();
     //ctx.clearRect(185, 625, 210, 40);
-    ctx.drawImage(slotWindowImg, 175, 625, 220, 40);
-    var playerMoney = 'Money: ' + character_info.gold + '';
+    ctx.drawImage(slotWindowImg, 175, 625, 220, 40);  // CTX.DRAWIMAGE works better here than CreateImage func 
+    var playerMoney = 'Money: ' + character_info.gold + ' g';
     ctx.font = '600 30px Arial';
     ctx.fillStyle = "#fbc531";
     ctx.fillText(playerMoney, 185, 655);
   }
 
   for (var i = 0; i <= 7; i++) {
-    ctx.drawImage(slotWindowImg, slotWindow[i].x, slotWindow[i].y, slotWindow[i].width, slotWindow[i].height);
-    ctx.drawImage(slotWindowImg, shopSlot[i].x, shopSlot[i].y, shopSlot[i].width, shopSlot[i].height);
+    /* IMAGES FROM CREATOR */
+    createImage('images/slotWindow.png', slotWindow[i].x, slotWindow[i].y, slotWindow[i].width, slotWindow[i].height);
+    createImage('images/slotWindow.png', shopSlot[i].x, shopSlot[i].y, shopSlot[i].width, shopSlot[i].height);
     shopDiv.innerHTML += '<div id="shopItem' + i + '" class="shopItem shopItem' + i + '"><img src="' + items[randomizedItems()].image + '" id="shopImg" class=""></div> ';
     shopDiv.innerHTML += '<div id="playerItem' + i + '" class="playerInventory playerItem' + i + '"></div> ';
   }
@@ -71,10 +69,25 @@
   init();
   ctx.fillStyle = '#ff9ff3';
   ctx.fillText('Marshall, the shopkeeper', 115, 266);
-  testImg = new Image;
-  testImg.src = 'images/Avatar.png';
-  ctx.drawImage(testImg, 200, 100, 128, 128);
-  ctx.drawImage(heroAvatar, 200, 485, 128, 128);
+
+  
+  /* IMAGES */
+
+  createImage('images/Avatar.png', 200, 100, 128, 128);
+  createImage('images/knightAvatar.png', 200, 485, 128, 128);
+
+  
+    /* Image Creator */
+
+    function createImage( src, x, y, width, height) {
+
+var image = new Image();
+image.src = src;
+image.onload = function () {
+    ctx.drawImage(image, x,y, width, height);
+   
+}
+}
 
 
   /* Randomize items from 0 to 2 */

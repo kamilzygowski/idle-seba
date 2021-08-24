@@ -43,7 +43,9 @@
 
     ctx.fillStyle = '#3498db';   //inny niebieski
     ctx.fillRect(0, 0, tavern.width, tavern.height);
-    ctx.drawImage(tavernBackground, 0, 0, tavern.width, tavern.height);
+
+    /* IMAGES ONLOAD */
+    createImage(0,0,tavern.width,tavern.height,'images/tavern.png');
 
     /* var text= "Siehehehema, może piwka?";
      ctx.fillStyle = "indigo";
@@ -79,6 +81,18 @@
     }
 
     returnToBasicState();
+
+    /* Image Creator */
+
+    function createImage(x, y, width, height, src) {
+
+        var image = new Image();
+        image.src = src;
+        image.onload = function () {
+            ctx.drawImage(image, x,y, width, height);
+           
+        }
+    }
 
     /* Reset the canvas with all functionality */
 

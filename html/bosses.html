@@ -41,7 +41,19 @@
 
     var canvas = document.getElementById("bosses");
     var ctx = canvas.getContext('2d');
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    createImage(background.src, 0, 0, canvas.width, canvas.height);
+
+    /* Image Creator */
+
+    function createImage(src, x, y, width, height) {
+
+        var image = new Image();
+        image.src = src;
+        image.onload = function () {
+            ctx.drawImage(image, x, y, width, height);
+
+        }
+    }
 
     /* Clear Canvas Func */
 
@@ -51,12 +63,13 @@
 
     function render() {
         ctx.clearRect(570, 200, frameWidth, frameHeight);
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+        createImage(background.src, 0, 0, canvas.width, canvas.height);
         ctx.drawImage(player, 222, 512, 128, 128);
-        ctx.drawImage(hpBar, 222, 75, 950, 62);
+        createImage(hpBar.src, 222, 75, 950, 62);
         ctx.fillStyle = '#d63031';
         ctx.fillRect(227, 79, 942, 54);
-        ctx.drawImage(redEyeImg, column * frameWidth, row * frameHeight, frameWidth, frameHeight, 570, 200, frameWidth, frameHeight);
+        createImage(redEyeImg.src, column * frameWidth, row * frameHeight, frameWidth, frameHeight, 570, 200, frameWidth, frameHeight);
     }
 
 
@@ -88,8 +101,8 @@
 
                 if (sliderPercent < dmgPercent || sliderPercent <= 0) {
                     sliderPercent = 0.000001;
-                    
-                    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+                    createImage(background.src, 0, 0, canvas.width, canvas.height);
                     bossesDiv.innerHTML += '<h1 class="subs">Brawo, pokonałeś Red Eyea! </h1>';
                     clearInterval(frameLooping);
 
@@ -111,7 +124,7 @@
                 ctx.drawImage(hpBar, 222, 75, 950, 62);
                 ctx.fillStyle = '#d63031';
                 dmgDone = 25;
-                console.log(dmgPercent, sliderPercent);
+                console.log(dmgPercent.src, sliderPercent);
                 ctx.fillRect(227, 79, sliderPercent * 9.42, 54);
                 ctx.drawImage(redEyeImg, column * frameWidth, row * frameHeight, frameWidth, frameHeight, 570, 200, frameWidth, frameHeight);
 
@@ -130,8 +143,8 @@
 
 
 
-            ctx.drawImage(player, 222, 512, 128, 128);
-            ctx.drawImage(hpBar, 222, 75, 950, 62);
+            createImage(player.src, 222, 512, 128, 128);
+            createImage(hpBar.src, 222, 75, 950, 62);
             ctx.fillStyle = '#d63031';
             ctx.fillRect(227, 79, sliderPercent * 9.42, 54);
 
@@ -160,7 +173,7 @@
 
     .subs {
         font-size: 64px;
-        color:#fff;
+        color: #fff;
         text-align: center;
         position: absolute;
         margin-top: -33%;

@@ -32,8 +32,8 @@
 
     function expeditionLoop() {
         frameCount++;
-        exp = exp + 1.05;
-        gold += 0.08;
+        exp = exp + 0.0048;
+        gold += 0.0011;
         allLogs = document.querySelectorAll("#logsText");
         allLogsArray = Array.from(allLogs);
 
@@ -44,7 +44,7 @@
         ctx.fillText("Gold: " + Math.floor(gold) + '/ ' + goldCap, 450, 150);
         animFrame = requestAnimationFrame(expeditionLoop);
 
-        if (frameCount == 20) {
+        if (frameCount == 20 * 20 * 4) {
             /* Random number from 1 to 3 */
             var rng = Math.floor(Math.random() * 3);
             logDiv.innerHTML += textLogs[rng];
@@ -194,7 +194,7 @@
 
     #wanderingHero {
         offset-path: path('M 0,20 C20,900 400,0 1260,300');
-        animation: move 10000ms infinite alternate ease-in-out;
+        animation: move 90000ms infinite alternate ease-in-out;
         width: 128px;
         height: 128px;
         top: 355px;
