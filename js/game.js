@@ -46,6 +46,12 @@ var gameApp = {};
       });
     }
 
+    function updateExp(exp){
+      firebase.database().ref(uid).update({
+        exp: exp
+      });
+    }
+
     async function updateTactics(used, slotId, heroId, avatar){
       if(!used){
         //DEFAULT
@@ -191,6 +197,7 @@ var gameApp = {};
         skill: 0,
         gold: 50,
         hp: 800,
+        exp:0,
         inventory: [],
         ownedHeros: {},
         tactics: [  {"slotId": 0, "x": 100, "y": 100, "avatar": "images/slotWindow.png", "used": false, "heroId": 0},
@@ -219,5 +226,6 @@ var gameApp = {};
     gameApp.heroTactics = heroTactics;
     gameApp.getTactics = getTactics;
     gameApp.updateTactics = updateTactics;
+    gameApp.updateExp = updateExp;
 })()
 

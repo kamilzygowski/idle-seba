@@ -7,10 +7,6 @@
 
 <canvas id='tavern' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 <script>
-
-    init();
-
-
     var ctx = tavern.getContext('2d');
     ctx.font = '24px Tahoma';
     var tavernBackground = new Image;
@@ -21,6 +17,7 @@
     var bet = playerMoney;
     var playerChoseNumber = 0;
     var sliderValue;
+    var bmPayment = 10;
 
     /* WHOLE npcs poppingWindows */
 
@@ -31,7 +28,7 @@
             '<div id="nr4" class="4">4</div><div id="nr5" class="5">5</div><div id="nr6" class="6">6</div></div><p id="pickNrText">Choose your number: </p><p id="playerMoney">Money: ' + playerMoney +
             ' gold</p><div id="gambleResult"></div></div>',
         poppingWindowBlackMarket: '<div id="poppingWindow"><p id="windowText"> ' + blackMarketText[0] +
-            '</p><p id="windowText3"> Just pay me: 10 gold and you got it</p><p id="windowText4">Remember, no refunds HUAHUAHUA</p><img id="bmSlot" src="images/slotWindow.png">' +
+            '</p><p id="windowText3"> Just pay me: ' + bmPayment + ' gold and you got it</p><p id="windowText4">Remember, no refunds HUAHUAHUA</p><img id="bmSlot" src="images/slotWindow.png">' +
             '<img id="bmSlot" src="images/spear.png"><button id="confirmButton"> confirm </button><img id="xButton' + '" src="images/closeButton.png"><img src="images/window.png"><p id="playerMoney">Money: ' + playerMoney + ' gold</p></div>'
     };
 
@@ -45,7 +42,7 @@
     ctx.fillRect(0, 0, tavern.width, tavern.height);
 
     /* IMAGES ONLOAD */
-    createImage(0,0,tavern.width,tavern.height,'images/tavern.png');
+    createImage(0, 0, tavern.width, tavern.height, 'images/tavern.png');
 
     /* var text= "Siehehehema, może piwka?";
      ctx.fillStyle = "indigo";
@@ -75,12 +72,18 @@
     var character_info;
     var playerMoney;
 
+
+    returnToBasicState();
+
+    /* GET My profile info from data base */
+
     async function get_my_profile_info() {
         character_info = await gameApp.getCharacterInfo();
         playerMoney = character_info.gold;
     }
 
-    returnToBasicState();
+    get_my_profile_info();
+
 
     /* Image Creator */
 
@@ -89,8 +92,8 @@
         var image = new Image();
         image.src = src;
         image.onload = function () {
-            ctx.drawImage(image, x,y, width, height);
-           
+            ctx.drawImage(image, x, y, width, height);
+
         }
     }
 
@@ -218,10 +221,6 @@
         });
     }
 
-    function init() {
-        get_my_profile_info();
-    }
-
     setInterval(function () {
 
         /* Updating Player money */
@@ -268,6 +267,8 @@
     /* Black Market confirm trade */
 
     function confirmButtonClick() {
+        gameApp.updateMoney(character_info.gold - bmPayment);
+        get_my_profile_info();
         document.getElementById('poppingWindow').innerHTML = '<p id="bmThanks"> Thanks, thanks, take to the hands</p><p id="windowText4">GOOD bye, hi-hy-hy</p><img src="images/window.png"><img id="xButton' +
             '" src="images/closeButton.png"></div>';
         document.getElementById('xButton').addEventListener('click', closeWindow);

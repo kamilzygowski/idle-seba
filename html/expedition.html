@@ -30,6 +30,14 @@
     var allLogs;
     var logsText = document.querySelectorAll('#logsText');
 
+    get_my_profile_info();
+
+    async function get_my_profile_info(){
+        character_info = await gameApp.getCharacterInfo();
+        //console.log(character_info);   
+    }
+
+
     function expeditionLoop() {
         frameCount++;
         exp = exp + 0.0048;
@@ -99,6 +107,10 @@
     rewardButton.addEventListener('click', function () {
 
         /* Take the actual exp and give it to player directly on server */
+
+        gameApp.updateExp(character_info.exp + Math.round(parseInt(exp)));
+        gameApp.updateMoney(character_info.gold + Math.round(parseInt(gold)));
+        console.log(character_info);   
 
         /* When both gold and exp are full restart the loop, else just restart vars */
 
@@ -194,7 +206,7 @@
 
     #wanderingHero {
         offset-path: path('M 0,20 C20,900 400,0 1260,300');
-        animation: move 90000ms infinite alternate ease-in-out;
+        animation: move 80000ms infinite alternate ease-in-out;
         width: 128px;
         height: 128px;
         top: 355px;
