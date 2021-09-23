@@ -1,7 +1,20 @@
+<b style="color: azure;">WYBIERZ PONIZEJ DUNGEON KTORY CHCESZ ZAGRAC</b>
 <canvas id='dungeon' width='1400px' height='720px' style='border:1px solid grey'></canvas>
-<button id = 'hero1heal' style="position: absolute; top:300px; left:800px;">Ulecz</button>
-<button id = 'hero1hit' style="position: absolute; top:350px; left:800px;">Uderz</button>
-<button id = 'hero1spell' style="position: absolute; top:400px; left:800px;">Zaklecie</button>
+
+<div class="chooseLevel" id="chooseLvl">
+    <button id = 'level1' class="dungeonButton" style="position: absolute; top:100px; left:700px;">1</button>
+    <button id = 'level2' class="dungeonButton" style="position: absolute; top:650px; left:800px;">2</button>
+    <button id = 'level3' class="dungeonButton" style="position: absolute; top:300px; left:900px;">3</button>
+    <button id = 'level4' class="dungeonButton" style="position: absolute; top:500px; left:1000px;">4</button>
+    <button id = 'level5' class="dungeonButton" style="position: absolute; top:200px; left:1100px;">5</button>
+</div>
+
+<div id="fight">
+    <button id = 'hero1heal' style="position: absolute; top:300px; left:850px;">Ulecz</button>
+    <button id = 'hero1hit' style="position: absolute; top:350px; left:850px;">Uderz</button>
+    <button id = 'hero1spell' style="position: absolute; top:400px; left:850px;">Zaklecie</button>
+    <button id = 'powrot' style="position: absolute; top:450px; left:850px;">powrot</button>
+</div>
 
 <script>
     
@@ -14,25 +27,63 @@
     var canvas = document.getElementById('dungeon');
     var ctx = dungeon.getContext('2d');
     var eventText = "";
+    var tacticSlots = [];
+    var raz = false;
+    var currentDungeonId = -1;
+    var currentRequest = null;
 
-    hero4 = new Hero(3, "Paczek", 'images/jakis_lucznik.png', 100, 400, 8, 100)
-    hero1 = new Hero(0, "Maciek", 'images/jakis_lucznik.png', 100, 100, 8, 100)
-    hero2 = new Hero(1, "Seba", 'images/Avatar.png', 700, 100, 10, 90)
-    hero3 = new Hero(2, "Siusiak", 'images/Avatar.png', 700, 400, 10, 90)
-    
-    allHeroes.push(hero1);
-    allHeroes.push(hero2);
-    allHeroes.push(hero3);
-    allHeroes.push(hero4);
+    ctx.clearRect(0,0,dungeon.width, dungeon.height);
+    ctx.fillStyle = 'lightblue';   //marchewkowe tlo
+    ctx.fillRect(0, 0, dungeon.width, dungeon.height);
+
+    //NARAZIE WSZYSTKICH BIORACYCH UIDDZIAL W WALCE TRAKTUJE JAKBY BYLI Z JEDNEGO TEAMU w allHeroes ich trzymamy, ale bedzie trzeba 
+    //rozbic tych dobrych i tych zlych zeby ci zli to bylo ai 
+
+    async function createEnemies(dungeonNumber){
+
+        var request = new XMLHttpRequest();
+        request.open("GET","json/dungeon.json", false);
+        request.send(null);
+        var dungeonInfo = JSON.parse(request.responseText);
+
+        for(var i = 1; i<dungeonInfo[dungeonNumber].enemiesNumber+1; i++){
+            currentEnemy = dungeonInfo[dungeonNumber][i];
+            var hero = new Hero(currentEnemy.id, currentEnemy.name, currentEnemy.avatar,
+            currentEnemy.x, currentEnemy.y, currentEnemy.power, currentEnemy.health);
+            allHeroes.push(hero);
+        }
+    }
+
+    async function createHeros(){
+        tacticSlots = await gameApp.getTactics();
+
+        for(var i = 0; i<5; i++){
+            if(tacticSlots[i].used){
+                var heroInfo = await gameApp.getOwnedHero(tacticSlots[i].heroId);
+                var hero = new Hero(tacticSlots[i].heroId, heroInfo.name, heroInfo.avatar, 
+                tacticSlots[i].x, tacticSlots[i].y, heroInfo.power, heroInfo.health);
+                allHeroes.push(hero);
+            }
+        }
+    }
+
    
     ctx.save();
     ctx.font = '24px Tahoma';
 
     console.log(canvas);
     
-    dungeonLoop();
+    
+    //dungeonLoop();
 
-    function dungeonLoop(){
+    async function createDungeon(dungeonNumber) {
+        await createHeros();
+        await createEnemies(dungeonNumber);
+        dungeonLoop();
+    }
+
+    async function dungeonLoop(){
+
         ctx.clearRect(0,0,dungeon.width, dungeon.height);
         ctx.fillStyle = 'lightblue';   //marchewkowe tlo
         ctx.fillRect(0, 0, dungeon.width, dungeon.height);
@@ -45,7 +96,7 @@
             hero.update(ctx);
         });
         
-        requestAnimationFrame(dungeonLoop)
+        currentRequest = requestAnimationFrame(dungeonLoop)
     }
 
     function nextTurn(){
@@ -115,4 +166,58 @@
             alert("Musisz wybrać na kim zostanie użyta czynność");
         }
     },);
+
+    document.getElementById("powrot").addEventListener("click", function(){
+        var chooseLevel = document.getElementById("chooseLvl");
+        chooseLevel.style.visibility = "visible";
+        var fight = document.getElementById("fight");
+        fight.style.visibility = "hidden";
+        ctx.clearRect(0,0,dungeon.width, dungeon.height);
+        ctx.fillStyle = 'lightblue';   //marchewkowe tlo
+        ctx.fillRect(0, 0, dungeon.width, dungeon.height);
+        if(currentRequest) {
+            allHeroes = [];
+            cancelAnimationFrame(currentRequest);
+        }
+    })
+
+    var btnContainer = document.getElementsByClassName("chooseLevel");
+    btnContainer[0].addEventListener("click", function(e) { 
+
+        var fight = document.getElementById("fight");
+        fight.style.visibility = "visible";
+        dungeonNr = e.target.innerText;
+        if(currentRequest) {
+            allHeroes = [];
+            cancelAnimationFrame(currentRequest);
+        }
+        var chooseLevel = document.getElementById("chooseLvl");
+        chooseLevel.style.visibility = "hidden";
+        createDungeon(dungeonNr);
+     }) 
 </script>
+
+<style>
+    /*to pozawala ze div sie spawni na canvasie tak jakby*/
+    #fight { 
+        visibility: hidden; 
+    }
+    .chooseLevel {
+        visibility: visible;
+    }
+    .dungeonButton {
+        background-color: #008CBA;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .dungeonButton:hover {
+        background-color: white; 
+        color: black; 
+    }
+
+</style>

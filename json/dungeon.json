@@ -1,0 +1,117 @@
+{
+    "1":{ 
+        "enemiesNumber": 2,
+        "1": {
+            "id": 1,
+            "name": "Nicpoń",
+            "avatar": "images/Skull avatar.png",
+            "power": 1,
+            "health": 200,  
+            "x": 700 ,
+            "y": 100
+        },
+        "2": {
+            "id": 2,
+            "name": "Wyrwibąk",
+            "avatar": "images/jakis_lucznik.png",
+            "power": 2,
+            "health": 200,
+            "x": 700,
+            "y": 400
+        }
+    },
+
+    "2":{ 
+        "enemiesNumber": 3,
+        "1": {
+            "id": 1,
+            "name": "Siusiumajtek",
+            "avatar": "images/Skull avatar.png",
+            "power": 1,
+            "health": 200,  
+            "x": 700 ,
+            "y": 50
+        },
+        "2": {
+            "id": 2,
+            "name": "Huj",
+            "avatar": "images/jakis_lucznik.png",
+            "power": 2,
+            "health": 200,
+            "x": 900,
+            "y": 250
+        },
+        "3": {
+            "id": 3,
+            "name": "Cwel",
+            "avatar": "images/jakis_lucznik.png",
+            "power": 2,
+            "health": 200,
+            "x": 700,
+            "y": 250
+        }
+    },
+    "3":{ 
+        "enemiesNumber": 2,
+        "1": {
+            "id": 1,
+            "name": "Twoja stara",
+            "avatar": "images/Skull avatar.png",
+            "power": 1,
+            "health": 200,  
+            "x": 800 ,
+            "y": 100
+        },
+        "2": {
+            "id": 2,
+            "name": "Twój stary",
+            "avatar": "images/knightAvatar.png",
+            "power": 2,
+            "health": 200,
+            "x": 600,
+            "y": 400
+        }
+    },
+    "4":{ 
+        "enemiesNumber": 2,
+        "1": {
+            "id": 1,
+            "name": "Pepe",
+            "avatar": "images/seba_kot.jpg",
+            "power": 1,
+            "health": 200,  
+            "x": 600 ,
+            "y": 200
+        },
+        "2": {
+            "id": 2,
+            "name": "Seba",
+            "avatar": "images/pepe_kot.jpg",
+            "power": 2,
+            "health": 200,
+            "x": 750,
+            "y": 420
+        }
+    },
+    "5":{ 
+        "enemiesNumber": 2,
+        "1": {
+            "id": 1,
+            "name": "Nauraa",
+            "avatar": "images/Skull avatar.png",
+            "power": 1,
+            "health": 200,  
+            "x": 700 ,
+            "y": 100
+        },
+        "2": {
+            "id": 2,
+            "name": "Mordeczko",
+            "avatar": "images/jakis_lucznik.png",
+            "power": 2,
+            "health": 200,
+            "x": 700,
+            "y": 400
+        }
+    }
+}
