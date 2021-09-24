@@ -8,11 +8,15 @@
 <canvas id='bosses' width='1400px' height='720px' style='border:1px solid grey'></canvas>
 
 <script>
+    var character_info = '';
     var buttons = {
         soloBoss: document.querySelector('.soloBossBtn'),
         teamBoss: document.querySelector('.teamBossBtn'),
         heraldRaid: document.querySelector('heraldBossBtn')
     };
+    var columnHolder;
+    var spellUsed = false;
+
     var leftPanel = document.querySelectorAll(".left_panel_button");
     var bossesDiv = document.querySelector('#bossesView');
     paperSheet = new Image;
@@ -24,10 +28,12 @@
     var redEyeImg = new Image;
     redEyeImg.src = "images/redEye.png";
     var background = new Image;
-    background.src = "https://i.postimg.cc/3RsZ6d1X/pexels-lisha-riabinina-37487.jpg";
+    background.src = "https://i.postimg.cc/vZR2jL0b/arena.jpg";
+    var iceShower = new Image;
+    iceShower.src = "images/iceShower.png";
 
     var boss = {
-        redEye: { id: 0, lvl: 6, hp: 640, name: "The Red Eye", note: "One of a smaller bosses, strong strikes in pair with lack of intelligence." },
+        redEye: { id: 0, lvl: 6, hp: 640, name: "The Red Eye", note: "One of a smaller bosses, strong strikes in pair with lack of intelligence.", dmg: 73 },
     };
     var numColumns = 3;
     var numRows = 1;
@@ -54,6 +60,11 @@
 
         }
     }
+    // Get character profile info
+    async function get_my_profile_info() {
+        character_info = await gameApp.getCharacterInfo();
+
+    }
 
     /* Clear Canvas Func */
 
@@ -70,8 +81,10 @@
         ctx.fillStyle = '#d63031';
         ctx.fillRect(227, 79, 942, 54);
         createImage(redEyeImg.src, column * frameWidth, row * frameHeight, frameWidth, frameHeight, 570, 200, frameWidth, frameHeight);
+
     }
 
+    get_my_profile_info();
 
     /* ENTERS TO SOLO BOSS SECTION */
 
@@ -96,8 +109,8 @@
 
             var frameLooping = setInterval(function () {
                 currentFrame++;
+                dmgDone = 25;
                 dmgPercent = (dmgDone * 100) / boss.redEye.hp;
-                sliderPercent -= dmgPercent;
 
                 if (sliderPercent < dmgPercent || sliderPercent <= 0) {
                     sliderPercent = 0.000001;
@@ -123,8 +136,7 @@
                 ctx.drawImage(player, 222, 512, 128, 128);
                 ctx.drawImage(hpBar, 222, 75, 950, 62);
                 ctx.fillStyle = '#d63031';
-                dmgDone = 25;
-                console.log(dmgPercent.src, sliderPercent);
+
                 ctx.fillRect(227, 79, sliderPercent * 9.42, 54);
                 ctx.drawImage(redEyeImg, column * frameWidth, row * frameHeight, frameWidth, frameHeight, 570, 200, frameWidth, frameHeight);
 
@@ -137,9 +149,26 @@
                         });
                     }
                 }
+                ctx.font = '24px Tahoma';
+                ctx.fillStyle = "#fff";
+                ctx.fillText("HP: " + character_info.hp + "/800", 966, 595);
+                ctx.fillText("HP: 200/200", 966, 645);
+                /*  Make Ice shower animation and also cut it in a few seconds   */
+                if (spellUsed == true) {
+                    var maxFrame = numColumns * numRows - 1;
+                    if (currentFrame > maxFrame) {
+                        currentFrame = 0;
+                    }
+                    var column = currentFrame % numColumns;
+                    var row = Math.floor(currentFrame / numColumns);
+                    ctx.drawImage(iceShower, 240 * column, 240 * row, 240, 240, 570, 200, 240, 240);
+                    setTimeout(function () {
+                        spellUsed = false
+                    }, 1100);
+                }
 
-
-            }, 100);
+                /* END of set interval function */
+            }, 200);
 
 
 
@@ -149,8 +178,51 @@
             ctx.fillRect(227, 79, sliderPercent * 9.42, 54);
 
 
-            bossesDiv.innerHTML += '<div class="skills"><div class="skill1">skill 1</div><div class="skill2">skill 2</div><div class="skill3">skill 3</div></div>';
 
+            bossesDiv.innerHTML += '<div class="skills"><div class="skill1">Hit</div><div class="skill2">Heal</div><div class="skill3">Spell</div></div>';
+
+            /**/
+            /* Section of configurating all SKILLS availble during the battle */
+            /**/
+            var skills = {
+                skill1: document.querySelector('.skill1'),
+                skill2: document.querySelector('.skill2'),
+                skill3: document.querySelector('.skill3')
+            };
+
+            function redEyeAttack() {
+                character_info.hp -= boss.redEye.dmg;
+            }
+
+            skills.skill1.addEventListener('click', function () {
+                sliderPercent -= dmgPercent;
+
+                //Boss counterstrike
+                redEyeAttack();
+            })
+            skills.skill2.addEventListener('click', function () {
+                if (character_info.hp < 770) character_info.hp += 30;
+                else if (character_info.hp >= 770) character_info.hp = 800;
+
+                //Boss counterstrike
+                //redEyeAttack();
+            })
+            skills.skill3.addEventListener('click', function () {
+                sliderPercent -= dmgPercent;
+                /* Spell Animation */
+                var maxFrame = numColumns * numRows - 1;
+                if (currentFrame > maxFrame) {
+                    currentFrame = 0;
+                }
+
+                var column = currentFrame % numColumns;
+                var row = Math.floor(currentFrame / numColumns);
+                ctx.drawImage(iceShower, 240 * column, 240 * row, 240, 240, 570, 200, 240, 240);
+                spellUsed = true;
+
+                //Boss counterstrike
+                redEyeAttack();
+            })
 
 
         });
@@ -192,12 +264,19 @@
         text-align: center;
     }
 
+    .skill1:hover,
+    .skill2:hover,
+    .skill3:hover {
+        opacity: 0.4;
+    }
+
     .skill1 {
         width: 400px;
         height: 52px;
         margin-top: 12px;
         margin-bottom: 12px;
         background-color: deepskyblue;
+        cursor: pointer;
     }
 
     .skill2 {
@@ -206,6 +285,7 @@
         background-color: deepskyblue;
         margin-top: 12px;
         margin-bottom: 12px;
+        cursor: pointer;
     }
 
     .skill3 {
@@ -214,6 +294,7 @@
         background-color: deepskyblue;
         margin-top: 12px;
         margin-bottom: 12px;
+        cursor: pointer;
     }
 
     .btn {
