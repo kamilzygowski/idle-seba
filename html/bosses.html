@@ -31,6 +31,16 @@
     background.src = "https://i.postimg.cc/vZR2jL0b/arena.jpg";
     var iceShower = new Image;
     iceShower.src = "images/iceShower.png";
+    var clawSmash = new Image;
+    clawSmash.src = "images/clawSmashBigger.png";
+    var statusStunn = new Image;
+    statusStunn.src = "images/stunn.png";
+
+    /* State holders */
+    var playerTurn = false;
+    var showSkill = false;
+    var enemyUsedStunn = false;
+    var enemyUtility = 0;
 
     var boss = {
         redEye: { id: 0, lvl: 6, hp: 640, name: "The Red Eye", note: "One of a smaller bosses, strong strikes in pair with lack of intelligence.", dmg: 73 },
@@ -40,6 +50,10 @@
     var frameWidth = redEyeImg.width / numColumns;
     var frameHeight = redEyeImg.height / numRows;
     var currentFrame = 0;
+    var frameTime = 0;
+    var thisFrame = 0;
+    var fTime = 0;
+    var tFrame = 0;
 
     var sliderPercent = 100;
     var dmgDone, dmgPercent;
@@ -66,10 +80,91 @@
 
     }
 
+    function redEyeAttack() {
+        character_info.hp -= boss.redEye.dmg;
+        showSkill = true;
+
+        var displaySkill = setInterval(function () {
+            if (showSkill == true) {
+                frameTime += 0.6;
+                frameTime = frameTime % 100;
+                thisFrame = Math.round(frameTime / 8);
+                ctx.drawImage(clawSmash, (320 * 2) * thisFrame, 0, 320 * 2, 160 * 2, 20, 380, 320 * 2, 160 * 2);
+            }
+            /* shut down setInterval after certain time */
+            setTimeout(function () {
+                clearInterval(displaySkill);
+                showSkill = false;
+                frameTime = 0;
+                thisFrame = 0;
+                // After how much time stop showing skill render
+            }, 2000)
+        }, 100 / 60)
+
+    }
+
+    function bossAttack1() {
+        console.log("bossAttack1 used");
+
+    }
+
+    function bossUtility() {
+        redEyeImg.src = "images/redEyeBlue.png";
+    }
+
+    function ultimate() {
+        character_info.hp -= boss.redEye.dmg;
+        
+        enemyUsedStunn = true;
+
+        var displaySkill = setInterval(function () {
+            if (enemyUsedStunn == true) {
+                fTime += 0.6;
+                fTime = fTime % 100;
+                tFrame = Math.round(fTime / 16);
+                ctx.drawImage(statusStunn, 160 * tFrame, 0, 160, 160, 200, 460, 160, 160);
+            }
+            /* shut down setInterval after certain time */
+            setTimeout(function () {
+                clearInterval(displaySkill);
+                enemyUsedStunn = false;
+                fTime = 0;
+                tFrame = 0;
+                // After how much time stop showing skill render
+            }, 2000)
+        }, 100 / 60)
+
+        /* Make second attack after apllying stunn */
+        /*setTimeout(function(){
+            redEyeAttack();
+        }, 2000)*/
+    }
+
+
     /* Clear Canvas Func */
 
     function clearCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    /* Creating a answer turn made by the enemy */
+    function AiTurn() {
+        var x = 0;
+        var random = Math.floor(Math.random() * 3 + 1) // Rnadom nr from 1 to 3
+        if (random == 1) {
+            redEyeAttack();
+        } else if (random == 2) {
+
+            ultimate();
+        } else if (random == 3) {
+            bossUtility();
+
+        }
+        enemyUtility++;
+        if (enemyUtility >= 3) {
+            redEyeImg.src = "images/redEye.png";
+            enemyUtility = 0;
+        }
     }
 
     function render() {
@@ -87,9 +182,7 @@
     get_my_profile_info();
 
     /* ENTERS TO SOLO BOSS SECTION */
-
     buttons.soloBoss.addEventListener('click', function () {
-        console.log('cfff');
         var boss1 = '<li class="liElement"><a id="0">' + boss.redEye.name + ', level: ' + boss.redEye.lvl + ', ' + boss.redEye.note + '</a></li>';
         var boss2 = '<li class="liElement"><a id="1"> aaa bossik se taki od hoooja </a></li>', boss3 = '<li class="liElement"><a id="2"> aaa bossik se taki od hoooja </a></li>',
             boss4 = '<li class="liElement"><a id="3"> locked </a></li>', boss5 = '<li class="liElement"><a id="4"> locked </a></li>';
@@ -101,12 +194,10 @@
 
         var liElements = document.querySelectorAll('liElement');
         bossList.addEventListener('click', function (e) {
-            console.log(e.target.id);
             bossId = e.target.id;
             bossesDiv.innerHTML = '';
 
-            /* Frame looping Set Interval */
-
+            /* Frame looping Set Interval function rendering  whole window basic animations */
             var frameLooping = setInterval(function () {
                 currentFrame++;
                 dmgDone = 25;
@@ -152,7 +243,7 @@
                 ctx.font = '24px Tahoma';
                 ctx.fillStyle = "#fff";
                 ctx.fillText("HP: " + character_info.hp + "/800", 966, 595);
-                ctx.fillText("HP: 200/200", 966, 645);
+                ctx.fillText("MP: 200/200", 966, 645);
                 /*  Make Ice shower animation and also cut it in a few seconds   */
                 if (spellUsed == true) {
                     var maxFrame = numColumns * numRows - 1;
@@ -165,6 +256,12 @@
                     setTimeout(function () {
                         spellUsed = false
                     }, 1100);
+                }
+
+                if (playerTurn == true) {
+                    AiTurn();
+
+                    playerTurn = false;
                 }
 
                 /* END of set interval function */
@@ -189,16 +286,21 @@
                 skill2: document.querySelector('.skill2'),
                 skill3: document.querySelector('.skill3')
             };
+            
+            /* DEV HELPER <3 */
+            document.addEventListener('keyup', function (e) {
+                if (e.keyCode == 32) {
+                    redEyeAttack();
+                }
+            })
 
-            function redEyeAttack() {
-                character_info.hp -= boss.redEye.dmg;
-            }
 
             skills.skill1.addEventListener('click', function () {
                 sliderPercent -= dmgPercent;
 
                 //Boss counterstrike
-                redEyeAttack();
+                //redEyeAttack();
+                playerTurn = true;
             })
             skills.skill2.addEventListener('click', function () {
                 if (character_info.hp < 770) character_info.hp += 30;
@@ -206,7 +308,9 @@
 
                 //Boss counterstrike
                 //redEyeAttack();
+                playerTurn = true;
             })
+
             skills.skill3.addEventListener('click', function () {
                 sliderPercent -= dmgPercent;
                 /* Spell Animation */
@@ -221,7 +325,8 @@
                 spellUsed = true;
 
                 //Boss counterstrike
-                redEyeAttack();
+                //redEyeAttack();
+                playerTurn = true;
             })
 
 
